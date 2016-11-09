@@ -26,7 +26,7 @@ public class Location {
         double longDist = Math.abs(getLongitude() - location.getLongitude());
         double latDist = Math.abs(getLatitude() - location.getLatitude());
 
-        return Math.sqrt(longDist^2 + latDist^2);
+        return Math.sqrt(Math.pow(longDist, 2) + Math.pow(latDist, 2));
     }
 
     @Override
