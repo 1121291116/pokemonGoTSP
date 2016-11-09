@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.Set;
 
 public class Driver {
     public static void main(String[] args) throws Exception {
@@ -27,14 +28,22 @@ public class Driver {
 
         Route r = new Route(route);
 
-        SimulatedAnnealing sa = new SimulatedAnnealing(0.85, 1.0, 0.00001);
-        Route best_route = sa.findRoute(r, sa.init_temperature);
+        SimulatedAnnealing sa = new SimulatedAnnealing(0.95, 1.0, 0.00001, 50);
+        Route best_route = sa.findRoute(r);
         ArrayList<Location> best = best_route.getLocations();
 
-        for (Location l : best) {
-            System.out.print(l.getId() + " --> ");
+
+
+        Set<Route> s = sa.getVisited();
+        Route min = best_route;
+        for (Route x : s) {
+            if (x.getTotalDistance() < min.getTotalDistance()) {
+                min = x;
+            }
         }
-        System.out.println(best.get(0).getId());
-        System.out.println(best_route.getTotalStringDistance());
+
+        System.out.println(min.getTotalDistance());
+
+
     }
 }

@@ -1,8 +1,8 @@
 public class Location {
 
-    int id;
-    double longitude;
-    double latitude;
+    private int id;
+    private double longitude;
+    private double latitude;
 
     public Location(int id, double longitude, double latitude) {
         this.id = id;
