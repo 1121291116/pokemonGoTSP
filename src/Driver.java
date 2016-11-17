@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Set;
 
 public class Driver {
+
     public static void main(String[] args) throws Exception {
         String city_file = args[0];
         BufferedReader br = new BufferedReader(new FileReader(city_file));
@@ -26,17 +27,19 @@ public class Driver {
             route.add(l);
         }
 
-        Route r = new Route(route);
 
-        SimulatedAnnealing sa = new SimulatedAnnealing(0.95, 1.0, 0.00001, 50);
-        Route best_route = sa.findRoute(r);
+
+        Tour r = new Tour(route);
+
+        SimulatedAnnealing sa = new SimulatedAnnealing(0.95, 1.0, 0.00001, 1000);
+        Tour best_route = sa.findtour(r);
         ArrayList<Location> best = best_route.getLocations();
 
 
 
-        Set<Route> s = sa.getVisited();
-        Route min = best_route;
-        for (Route x : s) {
+        Set<Tour> s = sa.getVisited();
+        Tour min = best_route;
+        for (Tour x : s) {
             if (x.getTotalDistance() < min.getTotalDistance()) {
                 min = x;
             }
