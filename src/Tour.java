@@ -2,9 +2,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Arrays;
 
-public class Route {
+public class Tour {
     private ArrayList<Location> locations = new ArrayList<Location>();
-    public Route(ArrayList<Location> locations) {
+
+    public Tour(ArrayList<Location> locations) {
         this.locations.addAll(locations);
         Collections.shuffle(this.locations);
     }
@@ -13,7 +14,7 @@ public class Route {
         return locations;
     }
 
-    public Route(Route route) {
+    public Tour(Tour route) {
         this.locations.addAll(route.locations);
     }
 
