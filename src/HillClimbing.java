@@ -1,20 +1,18 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.PrintWriter;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Collections;
 import java.util.ArrayList;
 import java.util.Random;
 
-public class HillClimbling {
+public class HillClimbing {
 
 
 	String inputFile;
 	String city;
+	//Dimension
 	int dim;
 	double[][] nodes;
 	double[][] matrixD;
@@ -26,7 +24,7 @@ public class HillClimbling {
 	int numIteration;
 	int totalIter;
 
-	public HillClimbling(String inputFile) throws IOException {
+	public HillClimbing(String inputFile) throws IOException {
 		this.inputFile = inputFile;
 		this.randy = new Random();
 		this.numIteration = 50000000;
@@ -185,13 +183,13 @@ public class HillClimbling {
 	}
 
 
-	private int[] hillClimbling(int[] tour, int[] sol) {
+	private int[] hillClimbing(int[] tour, int[] sol) {
 		//evaluate current tour cost
 		//generate new tours based on current
 		//compare
 		double newCost;
 		int iter = totalIter;
-		HashSet<Integer> swaped = new HashSet<>();
+		HashSet<Integer> swapped = new HashSet<>();
 
 		// System.out.println("Climbing " + iter);
 		while (iter < numIteration) {
@@ -199,8 +197,8 @@ public class HillClimbling {
 			// currentCost = tourLength(tour);
 			int[] newTour = Arrays.copyOf(tour, tour.length);
 			int swap = randy.nextInt(swaps.size());
-			if (!swaped.contains((swap))) {
-				swaped.add(swap);
+			if (!swapped.contains((swap))) {
+				swapped.add(swap);
 				newTour(newTour, swap);
 				newCost = tourLength(newTour);
 				iter++;//Made one swap
@@ -213,12 +211,12 @@ public class HillClimbling {
 					tour = newTour;
 					sol = newTour;
 					currentCost = newCost;
-					swaped = new HashSet<>();
+					swapped = new HashSet<>();
 					// System.out.print("Startover + ");
 					System.out.println("iter: " + (iter - 1) + " " + newCost);
 				}
 			}
-			if(swaped.size() == swaps.size()) {
+			if(swapped.size() == swaps.size()) {
 				// System.out.println("All done " + iter);
 				break;
 			}
@@ -240,7 +238,7 @@ public class HillClimbling {
 		a = currentCost;
 		printTour(tour);
 		System.out.println("Before climbing cost: " + currentCost);
-		tour = hillClimbling(tour, tour);
+		tour = hillClimbing(tour, tour);
 		System.out.println("Here AGAIN");
 		System.out.println("After climbing cost: " + currentCost);
 		printTour(tour);
@@ -260,7 +258,7 @@ public class HillClimbling {
 			newTour = newTour(newTour, randy.nextInt(swaps.size()));
 			// System.out.println("Nww  shuffled");
 			// printTour(newTour);
-			tour = hillClimbling(newTour, tour);
+			tour = hillClimbing(newTour, tour);
 			// printTour(tour);
 		}
 
@@ -290,6 +288,6 @@ public class HillClimbling {
 
 	public static void main(String[] args) throws IOException{
 
-		new HillClimbling(args[0]);
+		new HillClimbing(args[0]);
 	}
 }
