@@ -1,3 +1,5 @@
+package pokemonGo;
+
 public class Location {
 
     private int id;

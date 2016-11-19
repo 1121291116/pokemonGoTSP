@@ -24,13 +24,7 @@ public class MstApproximation {
 			euler[e.getStarting() - 1].add(e);
 			Edge reverse = new Edge(e.getEnding(), e.getStarting(), e.getWeight());
 			euler[e.getEnding() - 1].add(reverse);
-		}
-//		for(LinkedList<Edge> l : euler){
-//			for(Edge e : l){
-//				System.out.println(e.getAll());
-//			}
-//		}
-		
+		}		
 		
 		// find Euler tour
 		int totalSize = MST.size() * 2;
