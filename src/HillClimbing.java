@@ -27,7 +27,7 @@ public class HillClimbing {
 	public HillClimbing(String inputFile) throws IOException {
 		this.inputFile = inputFile;
 		this.randy = new Random();
-		this.numIteration = 50000000;
+		this.numIteration = 500000;
 		this.totalIter = 0;
 		run();
 	}
@@ -183,47 +183,68 @@ public class HillClimbing {
 	}
 
 
-	private int[] hillClimbing(int[] tour, int[] sol) {
-		//evaluate current tour cost
-		//generate new tours based on current
-		//compare
-		double newCost;
-		int iter = totalIter;
-		HashSet<Integer> swapped = new HashSet<>();
+	private int[] hillClimbing(int[] tour) {
+        //evaluate current tour cost
+        //generate new tours based on current
+        //compare
+        double localMin = tourLength(tour);
+//        int[] sol = tour;
+        double newCost;
+        int iter = totalIter;
 
-		// System.out.println("Climbing " + iter);
-		while (iter < numIteration) {
-			//Calculate the cost of current tour
-			// currentCost = tourLength(tour);
-			int[] newTour = Arrays.copyOf(tour, tour.length);
-			int swap = randy.nextInt(swaps.size());
-			if (!swapped.contains((swap))) {
-				swapped.add(swap);
-				newTour(newTour, swap);
-				newCost = tourLength(newTour);
-				iter++;//Made one swap
-				// System.out.println("I: " + iter + " ");
-				// printTour(tour);
-				// printTour(newTour);
-				// System.out.println(currentCost + " " + newCost);
-				if (newCost < currentCost) {
-					//If find a better one, start over from current solution
-					tour = newTour;
-					sol = newTour;
-					currentCost = newCost;
-					swapped = new HashSet<>();
-					// System.out.print("Startover + ");
-					System.out.println("iter: " + (iter - 1) + " " + newCost);
-				}
-			}
-			if(swapped.size() == swaps.size()) {
-				// System.out.println("All done " + iter);
-				break;
-			}
-		}
+        /*
+        int iterator = 0;
+        while (iterator < 5000) {
+            int[] newTour = twoOpt(tour);
+            newCost = tourLength(newTour);
+            if (newCost < currentCost) {
+                sol = newTour;
+                currentCost = newCost;
+            }
+            iterator ++;
+
+        }
+        return sol;
+
+        */
+
+
+        HashSet<Integer> swapped = new HashSet<>();
+
+        // System.out.println("Climbing " + iter);
+        while (iter < numIteration) {
+            //Calculate the cost of current tour
+            // currentCost = tourLength(tour);
+//			int[] newTour = Arrays.copyOf(tour, tour.length);
+
+            int swap = randy.nextInt(swaps.size());
+            if (!swapped.contains((swap))) {
+                swapped.add(swap);
+//				newTour(newTour, swap);
+                int[] newTour = twoOpt(tour, swap);
+                newCost = tourLength(newTour);
+                iter++;//Made one swap
+                if (newCost < localMin) {
+                    //If find a better one, start over from current solution
+
+                    tour = newTour;
+                    localMin = newCost;
+                    swapped = new HashSet<>();
+                    // System.out.print("Startover + ");
+                    System.out.println("iter: " + (iter - 1) + " " + newCost);
+                }
+            }
+
+
+            if (swapped.size() == swaps.size()) {
+                // System.out.println("All done " + iter);
+                break;
+            }
+        }
 		totalIter = iter;
 		// System.out.println(iter + " " + numIteration +  " " + currentCost);
-		return sol;
+		return tour;
+
 	}
 
 
@@ -234,11 +255,12 @@ public class HillClimbing {
 		System.out.println("Here");
 		shuffle(tour);
 
-		this.currentCost = tourLength(tour);
+
 		a = currentCost;
 		printTour(tour);
 		System.out.println("Before climbing cost: " + currentCost);
-		tour = hillClimbing(tour, tour);
+		tour = hillClimbing(tour);
+        this.currentCost = tourLength(tour);
 		System.out.println("Here AGAIN");
 		System.out.println("After climbing cost: " + currentCost);
 		printTour(tour);
@@ -250,15 +272,20 @@ public class HillClimbing {
 			if (totalIter %10000 == 1) {
 				System.out.println("Repeating" + totalIter);
 			}
-			int[] newTour = Arrays.copyOf(tour, tour.length);
+//			int[] newTour = Arrays.copyOf(tour, tour.length);
 			// System.out.println("newTour");
 			// printTour(newTour);
 			// shuffle(newTour);
-			newTour = newTour(newTour, randy.nextInt(swaps.size()));
-			newTour = newTour(newTour, randy.nextInt(swaps.size()));
+//			newTour = newTour(newTour, randy.nextInt(swaps.size()));
+//			newTour = newTour(newTour, randy.nextInt(swaps.size()));
+            int[] newTour = doubleBridgeMove(tour);
 			// System.out.println("Nww  shuffled");
 			// printTour(newTour);
-			tour = hillClimbing(newTour, tour);
+			newTour = hillClimbing(newTour);
+            if (tourLength(newTour) < tourLength(tour)) {
+                tour = newTour;
+                this.currentCost = tourLength(tour);
+            }
 			// printTour(tour);
 		}
 
@@ -281,13 +308,59 @@ public class HillClimbing {
       		ar[i] = a;
    		}
   	}
+
+    // Implement double bridge move to create a perturbation
+    private int[] doubleBridgeMove(int[] sol) {
+        int[] perturbed = new int[sol.length];
+        int cut1 = 1 + randy.nextInt(sol.length / 4);
+        int cut2 = 1 + cut1 + randy.nextInt(sol.length / 4);
+        int cut3 = 1 + cut2 + randy.nextInt(sol.length/ 4);
+        System.arraycopy(sol, 0, perturbed, 0, cut1);
+        System.arraycopy(sol, cut3, perturbed, cut1, sol.length - cut3);
+        System.arraycopy(sol, cut2, perturbed, cut1 + sol.length - cut3, cut3 - cut2);
+        System.arraycopy(sol, cut1, perturbed, cut1 + sol.length - cut2, cut2 - cut1);
+        return perturbed;
+    }
+
+    private int[] threeBridgeMove(int[] sol) {
+        int[] perturbed = new int[sol.length];
+        int cut1 = 1 + randy.nextInt(sol.length / 5);
+        int cut2 = 1 + cut1 + randy.nextInt(sol.length / 5);
+        int cut3 = 1 + cut2 + randy.nextInt(sol.length/ 5);
+        int cut4 = 1 + cut3 + randy.nextInt(sol.length / 5);
+        System.arraycopy(sol, 0, perturbed, 0, cut1);
+        System.arraycopy(sol, cut4, perturbed, cut1, sol.length - cut4);
+        System.arraycopy(sol, cut2, perturbed, cut1 + sol.length - cut4, cut3 - cut2);
+        System.arraycopy(sol, cut1, perturbed, cut1 + sol.length - cut2, cut2 - cut1);
+        System.arraycopy(sol, cut1, perturbed, cut1 + sol.length - cut2, cut2 - cut1);
+
+        return perturbed;
+    }
  	// private int[] shuffle() {
  	// 	newArr = new int[]
  	// }
 
+    private int[] twoOpt(int[] candidate, int swapId) {
+        int length = candidate.length;
+        int[] output = new int[length];
+//        int cut1 = 1 + (int) (Math.random() * (length / 3));
+//        int cut2 = 1 + (int) (Math.random() * (length / 3)) + cut1;
+        int cut1 = swaps.get(swapId)[0];
+        int cut2 = swaps.get(swapId)[1];
+        System.arraycopy(candidate, 0, output, 0, cut1);
+        int[] middle = new int[cut2 - cut1];
+        System.arraycopy(candidate, cut1, middle, 0, cut2 - cut1);
+        for (int i = 0; i < cut2 - cut1; i ++) {
+            middle[i] = candidate[cut2 - i - 1];
+        }
+        System.arraycopy(middle, 0, output, cut1, cut2 - cut1);
+        System.arraycopy(candidate, cut2, output, cut2, candidate.length - cut2);
+        return output;
+    }
+
 
 	public static void main(String[] args) throws IOException{
 
-		new HillClimbing(args[0]);
+		new HillClimbing("./DATA/Boston.tsp");
 	}
 }
