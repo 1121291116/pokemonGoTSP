@@ -26,7 +26,7 @@ public class HillClimbing {
 	public HillClimbing(String inputFile) throws IOException {
 		this.inputFile = inputFile;
 		this.randy = new Random();
-		this.numIteration = 500000;
+		this.numIteration = 5000000;
 		this.totalIter = 0;
 		run();
 	}
@@ -207,6 +207,6 @@ public class HillClimbing {
 
 	public static void main(String[] args) throws IOException{
 
-		new HillClimbing("./DATA/Boston.tsp");
+		new HillClimbing("./DATA/Toronto.tsp");
 	}
 }
