@@ -1,11 +1,13 @@
+package pokemonGo;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Arrays;
 
-public class Tour {
+public class Route {
     private ArrayList<Location> locations = new ArrayList<Location>();
-
-    public Tour(ArrayList<Location> locations) {
+    
+    public Route(ArrayList<Location> locations) {
         this.locations.addAll(locations);
         Collections.shuffle(this.locations);
     }
@@ -14,7 +16,7 @@ public class Tour {
         return locations;
     }
 
-    public Tour(Tour route) {
+    public Route(Route route) {
         this.locations.addAll(route.locations);
     }
 
