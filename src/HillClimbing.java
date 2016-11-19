@@ -54,6 +54,7 @@ public class HillClimbing {
 		br.readLine();
 		for (int i = 0; i < dim; i++) {
 			split = br.readLine().split(" ");
+
 			nodes[i][0] = Double.parseDouble(split[1]);
 			nodes[i][1] = Double.parseDouble(split[2]);
 			tour[i] = i;
