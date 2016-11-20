@@ -7,11 +7,11 @@ import java.util.Arrays;
 
 public class Tour {
     private int size;
-    private ArrayList<Location> locations = new ArrayList<Location>();
+    private ArrayList<Location> locations = new ArrayList<>();
 
     public Tour(ArrayList<Location> locations) {
-        this.locations.addAll(locations);
-        Collections.shuffle(this.locations);
+        this.locations = locations;
+        //Collections.shuffle(this.locations);
         size = locations.size();
     }
 
@@ -49,5 +49,13 @@ public class Tour {
 
     public String toString() {
         return Arrays.toString(locations.toArray());
+    }
+
+    public void printTour() {
+        for (int i = 0; i < locations.size(); i ++) {
+            System.out.print(locations.get(i).getId() + ", ");
+        }
+        System.out.println();
+
     }
 }

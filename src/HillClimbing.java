@@ -111,10 +111,6 @@ public class HillClimbing {
         double localMin = tourLength(tour);
         double newCost;
         int iter = totalIter;
-
-
-
-
         HashSet<Integer> swapped = new HashSet<>();
 
         while (iter < numIteration) {
@@ -140,6 +136,8 @@ public class HillClimbing {
                 break;
             }
         }
+        System.out.println("**************");
+        System.out.println(iter - totalIter);
 		totalIter = iter;
 		return tour;
 
@@ -157,6 +155,7 @@ public class HillClimbing {
 			}
             int[] newTour = doubleBridgeMove(tour);
 			newTour = hillClimbing(newTour);
+            peak ++ ;
             System.out.println("peak: " + peak);
             System.out.println("peak height: " + tourLength(newTour));
             if (tourLength(newTour) < tourLength(tour)) {
@@ -167,6 +166,7 @@ public class HillClimbing {
 
         System.out.println("final");
 		System.out.println(currentCost);
+        System.out.println("swap" + swaps.size());
         printTour(tour);
 		return tour;
 	}
@@ -207,6 +207,6 @@ public class HillClimbing {
 
 	public static void main(String[] args) throws IOException{
 
-		new HillClimbing("./DATA/Toronto.tsp");
+		new HillClimbing("./DATA/Boston.tsp");
 	}
 }

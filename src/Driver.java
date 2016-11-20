@@ -9,7 +9,7 @@ import java.util.Set;
 public class Driver {
 
     public static void main(String[] args) throws Exception {
-        String city_file = "./DATA/Test.tsp";
+        String city_file = "./DATA/Boston.tsp";
         BufferedReader br = new BufferedReader(new FileReader(city_file));
         String line = null;
 
@@ -33,7 +33,8 @@ public class Driver {
 
 
         Tour r = new Tour(route);
-        System.out.println(r.toString());
+        ILS sol = new ILS(r);
+        sol.run();
 
 //        SimulatedAnnealing sa = new SimulatedAnnealing(0.95, 1.0, 0.00001, 1000);
 //        Tour best_route = sa.findtour(r);
