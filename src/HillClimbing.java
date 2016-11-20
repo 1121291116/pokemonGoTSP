@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashSet;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -10,6 +11,8 @@ public class HillClimbing {
 
 
 	String inputFile;
+	String outputFile;
+	PrintWriter output;
 	String city;
 	//Dimension
 	int dim;
@@ -21,14 +24,25 @@ public class HillClimbing {
 	int[] tour;
 	double currentCost;
 	int numIteration;
-	int totalIter;
+	long totalIter;
+	long duration;
+	long startTime;
 
-	public HillClimbing(String inputFile) throws IOException {
+
+	public HillClimbing(String inputFile, String outputFile) throws IOException {
 		this.inputFile = inputFile;
+		this.outputFile = outputFile;
+		this.output = new PrintWriter(outputFile, "UTF-8");
 		this.randy = new Random();
-		this.numIteration = 500000;
+		// this.numIteration = 5000000;
 		this.totalIter = 0;
+		this.duration = 10 * 60 * 1000;
+		// long startTime = System.currentTimeMillis();
 		run();
+		// long endTime = System.currentTimeMillis();
+		// System.out.println(startTime + " " + endTime);
+		// System.out.println((double)(endTime - startTime) / 1000);
+
 	}
 
 
@@ -72,7 +86,10 @@ public class HillClimbing {
 				}
 			}
 		}
+
+
         hillClimbingRepeat(tour);
+        output.close();
 	}
 
 
@@ -109,29 +126,39 @@ public class HillClimbing {
         //compare
         double localMin = tourLength(tour);
         double newCost;
-        int iter = totalIter;
+        long iter = System.currentTimeMillis() - startTime;
+  		// System.out.println("CURRE" + iter);
+  		// System.out.println(duration);
 
 
 
 
         HashSet<Integer> swapped = new HashSet<>();
 
-        while (iter < numIteration) {
+        while (System.currentTimeMillis() - startTime < duration) {
 
             int swap = randy.nextInt(swaps.size());
             if (!swapped.contains((swap))) {
                 swapped.add(swap);
                 int[] newTour = twoOpt(tour, swap);
                 newCost = tourLength(newTour);
-                iter++;//Made one swap
+                //Made one swap
                 if (newCost < localMin) {
                     //If find a better one, start over from current solution
 
                     tour = newTour;
                     localMin = newCost;
                     swapped = new HashSet<>();
-                    System.out.println("iter: " + (iter - 1) + " " + newCost);
+                    // System.out.println("iter: " + (iter - 1) + " " + newCost);
+                    if (localMin < currentCost) {
+                    	currentCost = localMin;
+                    	double ts = ((double)(System.currentTimeMillis() - startTime)) / 1000;
+                    	// System.out.println(ts + "\t" + currentCost);
+                    	output.format("%.3f\t%f%n", ts, currentCost);
+                    }
                 }
+                // iter = System.currentTimeMillis() - startTime;
+                // System.out.println("WEDDDD"  + iter);
             }
 
 
@@ -146,27 +173,30 @@ public class HillClimbing {
 
 
 	private int[] hillClimbingRepeat(int[] tour) {
+		this.startTime = System.currentTimeMillis();
 		tour = hillClimbing(tour);
         this.currentCost = tourLength(tour);
         int peak = 0;
-		while (totalIter < numIteration) {
-			totalIter++;
-			if (totalIter % 10000 == 1) {
-				System.out.println("Repeating" + totalIter);
-			}
+		// System.out.println("hllree" + startTime);
+		while (totalIter < duration) {
+			// totalIter++;
+			totalIter = System.currentTimeMillis() - startTime;
+			// if (totalIter % 1000 == 1) {
+			// 	System.out.println("Repeating" + totalIter);
+			// }
             int[] newTour = doubleBridgeMove(tour);
 			newTour = hillClimbing(newTour);
-            System.out.println("peak: " + peak);
-            System.out.println("peak height: " + tourLength(newTour));
+            // System.out.println("peak: " + peak);
+            // System.out.println("peak height: " + tourLength(newTour));
             if (tourLength(newTour) < tourLength(tour)) {
                 tour = newTour;
                 this.currentCost = tourLength(tour);
             }
 		}
 
-        System.out.println("final");
-		System.out.println(currentCost);
-        printTour(tour);
+  //       System.out.println("final");
+		// System.out.println(currentCost);
+  //       printTour(tour);
 		return tour;
 	}
 
@@ -206,6 +236,6 @@ public class HillClimbing {
 
 	public static void main(String[] args) throws IOException{
 
-		new HillClimbing("./DATA/Boston.tsp");
+		new HillClimbing(args[0], args[1]);
 	}
 }
