@@ -1,4 +1,6 @@
 import java.util.*;
+import java.io.PrintWriter;
+import java.io.IOException;
 
 /**
  * Created by chenzhijian on 11/19/16.
@@ -17,6 +19,9 @@ public class ILS {
     long duration;
     long startTime;
 
+    PrintWriter output;
+    String outputFile;
+
 
 
 
@@ -24,10 +29,10 @@ public class ILS {
     public ILS(Tour t) {
         bestTour = t;
         constructSwapMap(t);
-        numIteration = 5000000;
+        // numIteration = 5000000;
         totalIter = 0;
-        randy = new Random(1); // To be changed for arguemnt
-        this.duration = 300 * 1000; //To be changed for argument
+        randy = new Random(2); // To be changed for arguemnt
+        this.duration = 3 * 1000; //To be changed for argument
 
     }
 
@@ -35,16 +40,39 @@ public class ILS {
             // ILS(route, city, cutoff, seed);
             // 
             // 
-    public ILS(Tour t, String city, int cutoff, int seed) {
+    public ILS(Tour t, String city, int cutoff, int seed) throws IOException {
+        System.out.println(city + " " + cutoff + " "+ seed);
         bestTour = t;
         constructSwapMap(t);
+        totalIter = 0;
         randy = new Random(1);
         this.duration = cutoff * 1000;
         randy = new Random(seed);
+        outputFile = city + "_LS1_" + cutoff + "_" + seed + ".trace";
+        // System.out.println(outputFile);
+        // Atlanta LS1 600 4.trace
+        this.output = new PrintWriter(outputFile, "UTF-8");
+    }
+
+
+    public ILS(Tour t, String city, int cutoff, int seed, String path) throws IOException {
+        System.out.println(city + " " + cutoff + " "+ seed);
+        bestTour = t;
+        constructSwapMap(t);
+        totalIter = 0;
+        randy = new Random(1);
+        this.duration = cutoff * 1000;
+        randy = new Random(seed);
+        outputFile = path + city + "_LS1_" + cutoff + "_" + seed + ".trace";
+        // System.out.println(outputFile);
+        // Atlanta LS1 600 4.trace
+        this.output = new PrintWriter(outputFile, "UTF-8");
+        System.out.println(outputFile);
     }
 
     public void run() {
         iterativeHillClimbing(bestTour);
+        output.close();
     }
 
 
@@ -110,7 +138,7 @@ public class ILS {
         // long iter = System.currentTimeMills() - startTime;
         HashSet<Integer> swapped = new HashSet<>();
 
-        while (System.currentTimeMillis() - startTime < numIteration) {
+        while (System.currentTimeMillis() - startTime < duration) {
 
             int swap = randy.nextInt(swapMap.size());
             if (!swapped.contains((swap))) {
@@ -129,6 +157,7 @@ public class ILS {
                         currentCost = localMin;
                         double ts = ((double)(System.currentTimeMillis() - startTime)) / 1000;
                         System.out.println(ts + "\t" + currentCost);
+                        output.format("%.3f\t%f%n", ts, currentCost);
 
                     }
 

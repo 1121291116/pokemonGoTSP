@@ -13,7 +13,7 @@ public class Driver {
         String alg = args[1];
         int cutoff = Integer.parseInt(args[2]);
         int seed = Integer.parseInt(args[3]);
-
+        String path = args[4];
         //Check validity
 
 
@@ -58,7 +58,9 @@ public class Driver {
 
         Tour r = new Tour(route);
         r.printTour();
-        ILS sol = new ILS(r, city, cutoff, seed);
+        ILS sol = new ILS(r, city, cutoff, seed, path);        
+        // ILS sol = new ILS(r, city, cutoff, seed);
+        // ILS sol = new ILS(r);
         sol.run();
 
 //        SimulatedAnnealing sa = new SimulatedAnnealing(0.95, 1.0, 0.00001, 1000);
