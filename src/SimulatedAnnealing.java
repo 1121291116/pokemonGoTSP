@@ -86,7 +86,6 @@ public class SimulatedAnnealing {
             }
             temperature = temperature * alpha;
         }
-        output.close();
         return globalBest;
     }
 
