@@ -5,9 +5,11 @@ import java.util.Arrays;
 public class Tour {
     private ArrayList<Location> locations = new ArrayList<Location>();
 
-    public Tour(ArrayList<Location> locations) {
+    public Tour(ArrayList<Location> locations, boolean shuffle) {
         this.locations.addAll(locations);
-        Collections.shuffle(this.locations);
+        if (shuffle) {
+            Collections.shuffle(this.locations);
+        }
     }
 
     public ArrayList<Location> getLocations() {

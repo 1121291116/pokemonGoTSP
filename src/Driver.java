@@ -3,6 +3,7 @@ import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.Set;
 
+
 public class Driver {
 
     public static void main(String[] args) throws Exception {
@@ -28,25 +29,47 @@ public class Driver {
         }
 
 
+//        Tour r = new Tour(route, true);
+//        SimulatedAnnealing sa = new SimulatedAnnealing(0.95, 1.0, 0.00001, 50, 10000);
+//        Tour best_route = sa.findtour(r);
+//        ArrayList<Location> best = best_route.getLocations();
+//        Set<Tour> s = sa.getVisited();
+//        Tour min = best_route;
+//        for (Tour x : s) {
+//            if (x.getTotalDistance() < min.getTotalDistance()) {
+//                min = x;
+//            }
+//        }
+//
+//        System.out.println(min.getTotalDistance());
 
-        Tour r = new Tour(route);
 
-        SimulatedAnnealing sa = new SimulatedAnnealing(0.95, 1.0, 0.00001, 1000);
-        Tour best_route = sa.findtour(r);
-        ArrayList<Location> best = best_route.getLocations();
+        BnB bnb = new BnB(route);
+        double[][] e = {{1000,10,8,9,7},{10,1000,10,5,6},{8,10,1000,8,9},{9,5,8,1000,6},{7,6,9,6,1000}};
+        double[][] rowReduced = bnb.rowReduction(e);
 
-
-
-        Set<Tour> s = sa.getVisited();
-        Tour min = best_route;
-        for (Tour x : s) {
-            if (x.getTotalDistance() < min.getTotalDistance()) {
-                min = x;
+        System.out.println();
+        for (i = 0; i < 5; i++) {
+            for (int j = 0; j< 6; j++) {
+                System.out.print(rowReduced[i][j] + "\t");
             }
+            System.out.println();
+
         }
+        System.out.println();
 
-        System.out.println(min.getTotalDistance());
+        System.out.println();
 
+        double[][] columnReduced = bnb.columnReduction(rowReduced);
+        int n = columnReduced.length;
+
+        for (i = 0; i < n; i++) {
+            for (int j = 0; j< n; j++) {
+                System.out.print(columnReduced[i][j] + "\t");
+            }
+            System.out.println();
+
+        }
 
     }
 }
