@@ -79,24 +79,6 @@ public class SimulatedAnnealing {
         return globalBest;
     }
 
-//    public Tour adjacenttour(Tour tour) {
-//        int index1 = 0;
-//        int index2 = 0;
-//        Tour new_tour = new Tour(tour);
-//        while (index1 == index2) {
-//            index1 = (int) (tour.getLocations().size() * rand.nextDouble());
-//            index2 = (int) (tour.getLocations().size() * rand.nextDouble());
-//        }
-//
-//        Location l1 = new_tour.getLocations().get(index1);
-//        Location l2 = new_tour.getLocations().get(index2);
-//
-//        new_tour.getLocations().set(index1, l2);
-//        new_tour.getLocations().set(index2, l1);
-//
-//        return new_tour;
-//
-//    }
 
     private Tour twoOpt(Tour candidate) {
 

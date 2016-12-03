@@ -7,6 +7,7 @@ import java.util.HashSet;
 public class BnB {
 
     private double[][] adj;
+    private double[][] reducedMatrix;
     private double best_dist;
     int[] best_tour;
     double[] penCost;
@@ -39,6 +40,8 @@ public class BnB {
                 }
             }
         }
+
+        this.reducedMatrix = columnReduction(rowReduction(adj));
 
         System.out.println("\n-------------------------------------------------------\n");
     }
@@ -120,6 +123,8 @@ public class BnB {
         columnReduced[columnReduced.length-1][columnReduced.length-1] = lowerBound;
         return columnReduced;
     }
+
+
 
     public double[][] getAdj() {
         return adj;
