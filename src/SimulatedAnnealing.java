@@ -18,7 +18,7 @@ public class SimulatedAnnealing {
         this.alpha = alpha;
         this.rand = new Random(seed);
         this.seed = seed;
-        this.cutoff_time = cutOff;
+        this.cutoff_time = (long) (cutOff * Math.pow(10, 9));
     }
 
     public double getInit_temperature() {

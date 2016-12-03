@@ -30,7 +30,7 @@ public class Driver {
 
 
         Tour r = new Tour(route, true);
-        SimulatedAnnealing sa = new SimulatedAnnealing(1 - Math.pow(10, -6), 1.0, 0.00001, 50, (long)6e+11);
+        SimulatedAnnealing sa = new SimulatedAnnealing(1 - Math.pow(10, -6), 1.0, 0.00001, 50, 600);
         Tour best_route = sa.findtour(r);
         System.out.println("Global minimum: " + best_route.getTotalStringDistance());
 
