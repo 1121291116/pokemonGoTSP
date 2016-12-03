@@ -71,9 +71,7 @@ public class SimulatedAnnealing {
                 if (dist_new < globalBest.getTotalDistance()) {
                     globalBest = new_tour;
                     long timestamp = System.nanoTime() - start_time;
-                    System.out.println(timestamp + "\t" + globalBest);
-
-                    //System.out.println((System.nanoTime() - start_time)/(1e-6) + " | " + globalBest.getTotalDistance());
+                    System.out.println(timestamp/1e9 + "\t" + globalBest.getTotalStringDistance());
                 }
             }
             temperature = temperature * alpha;
