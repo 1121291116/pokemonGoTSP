@@ -31,6 +31,18 @@ public class ILS {
 
     }
 
+
+            // ILS(route, city, cutoff, seed);
+            // 
+            // 
+    public ILS(Tour t, String city, int cutoff, int seed) {
+        bestTour = t;
+        constructSwapMap(t);
+        randy = new Random(1);
+        this.duration = cutoff * 1000;
+        randy = new Random(seed);
+    }
+
     public void run() {
         iterativeHillClimbing(bestTour);
     }

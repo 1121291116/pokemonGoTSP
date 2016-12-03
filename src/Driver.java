@@ -10,19 +10,34 @@ public class Driver {
 
     public static void main(String[] args) throws Exception {
         String city_file = args[0];
-        // int seed = Integer.parseInt(args[1]);
+        String alg = args[1];
+        int cutoff = Integer.parseInt(args[2]);
+        int seed = Integer.parseInt(args[3]);
+
+        //Check validity
+
+
         // String inst = args[2];
         BufferedReader br = new BufferedReader(new FileReader(city_file));
         String line = null;
 
         ArrayList<Location> route = new ArrayList<>();
         int i = 0;
-        // System.out.println("-------------------------------------------");
-        while (i <= 4) {
-            System.out.println(br.readLine());
-            // br.readLine();
+        String city = br.readLine().split(" ")[1];
+
+        while(i <= 3) {
+            line = br.readLine();
             i++;
+                    System.out.println(line);
         }
+
+        
+        // System.out.println("-------------------------------------------");
+        // while (i <= 4) {
+        //     System.out.println(br.readLine());
+        //     // br.readLine();
+        //     i++;
+        // }
         // System.out.println("-------------------------------------------");
         while ((line = br.readLine()) != null && !line.contains("EOF")) {
             String[] splitLine = line.split(" ");
@@ -35,8 +50,15 @@ public class Driver {
 
 
 
+
+
+        if (alg.equals("LS1")) {
+            System.out.println("LS1");
+        }
+
         Tour r = new Tour(route);
-        ILS sol = new ILS(r);
+        r.printTour();
+        ILS sol = new ILS(r, city, cutoff, seed);
         sol.run();
 
 //        SimulatedAnnealing sa = new SimulatedAnnealing(0.95, 1.0, 0.00001, 1000);
