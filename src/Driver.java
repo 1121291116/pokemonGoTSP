@@ -9,18 +9,21 @@ import java.util.Set;
 public class Driver {
 
     public static void main(String[] args) throws Exception {
-        String city_file = "./DATA/Boston.tsp";
+        String city_file = args[0];
+        // int seed = Integer.parseInt(args[1]);
+        // String inst = args[2];
         BufferedReader br = new BufferedReader(new FileReader(city_file));
         String line = null;
 
         ArrayList<Location> route = new ArrayList<>();
         int i = 0;
-        System.out.println("-------------------------------------------");
+        // System.out.println("-------------------------------------------");
         while (i <= 4) {
             System.out.println(br.readLine());
+            // br.readLine();
             i++;
         }
-        System.out.println("-------------------------------------------");
+        // System.out.println("-------------------------------------------");
         while ((line = br.readLine()) != null && !line.contains("EOF")) {
             String[] splitLine = line.split(" ");
             int id = Integer.parseInt(splitLine[0]);
