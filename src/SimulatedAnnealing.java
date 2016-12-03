@@ -1,3 +1,5 @@
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.lang.reflect.Array;
 import java.util.*;
 
@@ -9,16 +11,22 @@ public class SimulatedAnnealing {
     private int seed;
     Random rand;
     long cutoff_time;
+    PrintWriter output;
+    String outputFile;
 
     private Set<Tour> visited = new HashSet<Tour>();
 
-    public SimulatedAnnealing(double alpha, double init_temperature, double min_temperature, int seed, long cutOff) {
+    public SimulatedAnnealing(String city, double alpha, double init_temperature, double min_temperature, int seed, long cutOff) throws IOException {
         this.init_temperature = init_temperature;
         this.min_temperature = min_temperature;
         this.alpha = alpha;
         this.rand = new Random(seed);
         this.seed = seed;
         this.cutoff_time = (long) (cutOff * Math.pow(10, 9));
+        outputFile = city + "_LS2_" + cutOff + "_" + seed + ".trace";
+        this.output = new PrintWriter(outputFile, "UTF-8");
+
+
     }
 
     public double getInit_temperature() {
@@ -72,10 +80,13 @@ public class SimulatedAnnealing {
                     globalBest = new_tour;
                     long timestamp = System.nanoTime() - start_time;
                     System.out.println(timestamp/1e9 + "\t" + globalBest.getTotalStringDistance());
+                    output.format("%.2f,%d%n", timestamp/1e9, (int)globalBest.getTotalDistance());
+
                 }
             }
             temperature = temperature * alpha;
         }
+        output.close();
         return globalBest;
     }
 
