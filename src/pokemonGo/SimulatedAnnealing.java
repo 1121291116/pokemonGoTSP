@@ -12,7 +12,7 @@ public class SimulatedAnnealing {
     private int seed;
     Random rand;
     long cutoff_time;
-    PrintWriter output;
+    public PrintWriter output;
     String outputFile;
 
     private Set<Tour> visited = new HashSet<Tour>();

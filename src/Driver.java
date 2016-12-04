@@ -47,7 +47,10 @@ public class Driver {
             IterativeLocalSearch sol = new IterativeLocalSearch(r, city, cutoff, seed, path);
             sol.run();
         } else if (alg.equals("LS2")) {
-
+            SimulatedAnnealing sa = new SimulatedAnnealing(city, 1 - Math.pow(10, -6), 1.0, 0.00001, seed, cutoff);
+            Tour best_route = sa.findtour(r);
+            sa.output.close();
+            System.out.println("Global minimum: " + best_route.getTotalStringDistance());
         } else {
             System.out.println("INVALID INPUT");
         }
