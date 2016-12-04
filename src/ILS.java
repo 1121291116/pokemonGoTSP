@@ -45,7 +45,6 @@ public class ILS {
         bestTour = t;
         constructSwapMap(t);
         totalIter = 0;
-        randy = new Random(1);
         this.duration = cutoff * 1000;
         randy = new Random(seed);
         outputFile = city + "_LS1_" + cutoff + "_" + seed + ".trace";
