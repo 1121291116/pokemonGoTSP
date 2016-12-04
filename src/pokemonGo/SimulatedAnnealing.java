@@ -17,14 +17,14 @@ public class SimulatedAnnealing {
 
     private Set<Tour> visited = new HashSet<Tour>();
 
-    public SimulatedAnnealing(String city, double alpha, double init_temperature, double min_temperature, int seed, long cutOff) throws IOException {
+    public SimulatedAnnealing(String city, double alpha, double init_temperature, double min_temperature, int seed, long cutOff, String path) throws IOException {
         this.init_temperature = init_temperature;
         this.min_temperature = min_temperature;
         this.alpha = alpha;
         this.randy = new Random(seed);
         this.seed = seed;
         this.cutoff_time = (long) (cutOff * Math.pow(10, 9));
-        outputFile = city + "_LS2_" + cutOff + "_" + seed + ".trace";
+        outputFile = path + city + "_LS2_" + cutOff + "_" + seed + ".trace";
         this.output = new PrintWriter(outputFile, "UTF-8");
 
 

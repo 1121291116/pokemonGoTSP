@@ -48,7 +48,7 @@ public class Driver {
             r.printTour();
             ils.run(r);
         } else if (alg.equals("LS2")) {
-            SimulatedAnnealing sa = new SimulatedAnnealing(city, 1 - Math.pow(10, -6), 1.0, 0.00001, seed, cutoff);
+            SimulatedAnnealing sa = new SimulatedAnnealing(city, 1 - Math.pow(10, -6), 1.0, 0.00001, seed, cutoff, path);
             Tour r = new Tour(route, sa.getRandy());
             r.printTour();
             Tour best_route = sa.findtour(r);
