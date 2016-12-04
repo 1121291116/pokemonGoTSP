@@ -10,12 +10,9 @@ public class ILS {
     Map<Integer, int[]> swapMap;
     ArrayList<Integer> swapIds;
     double[][] distanceMatrix;
-    int numIteration;
-    // int totalIter;
     Random randy;
-
     double currentCost;
-    long totalIter;
+    long timeElapsed;
     long duration;
     long startTime;
 
@@ -24,47 +21,13 @@ public class ILS {
 
 
 
-
-
-    public ILS(Tour t) {
-        bestTour = t;
-        constructSwapMap(t);
-        // numIteration = 5000000;
-        totalIter = 0;
-        randy = new Random(2); // To be changed for arguemnt
-        this.duration = 3 * 1000; //To be changed for argument
-
-    }
-
-
-            // ILS(route, city, cutoff, seed);
-            // 
-            // 
-    public ILS(Tour t, String city, int cutoff, int seed) throws IOException {
-        System.out.println(city + " " + cutoff + " "+ seed);
-        bestTour = t;
-        constructSwapMap(t);
-        totalIter = 0;
-        this.duration = cutoff * 1000;
-        randy = new Random(seed);
-        outputFile = city + "_LS1_" + cutoff + "_" + seed + ".trace";
-        // System.out.println(outputFile);
-        // Atlanta LS1 600 4.trace
-        this.output = new PrintWriter(outputFile, "UTF-8");
-    }
-
-
     public ILS(Tour t, String city, int cutoff, int seed, String path) throws IOException {
-        System.out.println(city + " " + cutoff + " "+ seed);
         bestTour = t;
         constructSwapMap(t);
-        totalIter = 0;
-        randy = new Random(1);
+        timeElapsed = 0;
         this.duration = cutoff * 1000;
         randy = new Random(seed);
         outputFile = path + city + "_LS1_" + cutoff + "_" + seed + ".trace";
-        // System.out.println(outputFile);
-        // Atlanta LS1 600 4.trace
         this.output = new PrintWriter(outputFile, "UTF-8");
         System.out.println(outputFile);
     }
@@ -95,22 +58,12 @@ public class ILS {
     private Tour iterativeHillClimbing(Tour tour) {
         this.currentCost = bestTour.getTotalDistance();
         this.startTime = System.currentTimeMillis();
-//        tour = hillClimbing(tour);
-//        this.currentCost = tourLength(tour);
 
-        int peak = 0;
-        while (totalIter < duration) {
-            totalIter = System.currentTimeMillis() - startTime;
-            // totalIter++;
-            // if (totalIter % 10000 == 1) {
-            //     System.out.println("Repeating" + totalIter);
-            // }
+        while (timeElapsed < duration) {
+            timeElapsed = System.currentTimeMillis() - startTime;
             tour = hillClimbing(tour);
             double newTourLength = tour.getTotalDistance();
 
-            peak ++;
-            // System.out.println("peak: " + peak);
-            // System.out.println("peak height: " + tour.getTotalDistance());
             if (newTourLength < currentCost) {
                 bestTour = tour;
                 this.currentCost = newTourLength;
@@ -118,9 +71,6 @@ public class ILS {
             tour = doubleBridgeMove(tour);
         }
 
-        // System.out.println("final");
-        // System.out.println(bestTour.getTotalDistance());
-        // System.out.println("swap:" + swapIds.size());
         tour.printTour();
         return tour;
     }
@@ -130,11 +80,8 @@ public class ILS {
         //evaluate current tour cost
         //generate new tours based on current
         //compare
-        // Tour localBest = tour;
         double localMin = tour.getTotalDistance();
         double newCost;
-        // int iter = totalIter; ??
-        // long iter = System.currentTimeMills() - startTime;
         HashSet<Integer> swapped = new HashSet<>();
 
         while (System.currentTimeMillis() - startTime < duration) {
@@ -143,11 +90,9 @@ public class ILS {
             if (!swapped.contains((swap))) {
                 swapped.add(swap);
                 Tour newTour = twoOpt(tour, swap);
-                // iter++;//Made one swap
                 newCost = newTour.getTotalDistance();
                 if (newCost < localMin) {
                     //If find a better one, start over from current solution
-
                     tour = newTour;
                     localMin = newCost;
                     swapped = new HashSet<>();
@@ -159,8 +104,6 @@ public class ILS {
                         output.format("%.3f\t%f%n", ts, currentCost);
 
                     }
-
-//                    System.out.println("iter: " + (iter - 1) + " " + newCost);
                 }
             }
 
@@ -169,16 +112,12 @@ public class ILS {
                 break;
             }
         }
-        // System.out.println("**************");
-        // System.out.println(iter - totalIter);
-        totalIter = System.currentTimeMillis() - startTime;
+        timeElapsed = System.currentTimeMillis() - startTime;
         // return localBest;
         return tour;
     }
 
     private Tour twoOpt(Tour candidate, int swapId) {
-//        System.out.println("before 2 opt");
-//        candidate.printTour();
         int length = candidate.getSize();
         Location[] output = new Location[length];
         int cut1 = swapMap.get(swapId)[0];
@@ -198,8 +137,6 @@ public class ILS {
         );
 
         Tour newTour = new Tour(newList);
-//        System.out.println("after 2 opt");
-//        newTour.printTour();
         return newTour;
     }
 
