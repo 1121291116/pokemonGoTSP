@@ -1,6 +1,5 @@
 package pokemonGo;
 
-import pokemonGo.Tour;
 
 import java.util.*;
 import java.io.PrintWriter;
@@ -14,7 +13,7 @@ public class IterativeLocalSearch {
     Map<Integer, int[]> swapMap;
     ArrayList<Integer> swapIds;
     double[][] distanceMatrix;
-    Random randy;
+    private Random randy;
     double currentCost;
     long timeElapsed;
     long duration;
@@ -25,9 +24,7 @@ public class IterativeLocalSearch {
 
 
 
-    public IterativeLocalSearch(Tour t, String city, int cutoff, int seed, String path) throws IOException {
-        bestTour = t;
-        constructSwapMap(t);
+    public IterativeLocalSearch(String city, int cutoff, int seed, String path) throws IOException {
         timeElapsed = 0;
         this.duration = cutoff * 1000;
         randy = new Random(seed);
@@ -36,7 +33,9 @@ public class IterativeLocalSearch {
         System.out.println(outputFile);
     }
 
-    public void run() {
+    public void run(Tour t) {
+        bestTour = t;
+        constructSwapMap(t);
         iterativeHillClimbing(bestTour);
         output.close();
     }
@@ -89,7 +88,6 @@ public class IterativeLocalSearch {
         HashSet<Integer> swapped = new HashSet<>();
 
         while (System.currentTimeMillis() - startTime < duration) {
-
             int swap = randy.nextInt(swapMap.size());
             if (!swapped.contains((swap))) {
                 swapped.add(swap);
@@ -162,7 +160,9 @@ public class IterativeLocalSearch {
         return new Tour(newList);
     }
 
-
+    public Random getRandy() {
+        return randy;
+    }
 
 
 }

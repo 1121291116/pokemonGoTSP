@@ -1,27 +1,37 @@
-package pokemonGo; /**
+ /**
  * Created by chenzhijian on 11/19/16.
  */
+ package pokemonGo;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Random;
 
 
 public class Tour {
     private int size;
     private ArrayList<Location> locations = new ArrayList<>();
 
+//    public Tour(ArrayList<Location> locations) {
+//        this.locations = locations;
+//        //Collections.shuffle(this.locations);
+//        size = locations.size();
+//    }
+
+    public Tour(ArrayList<Location> locations, Random rand) {
+        this.locations.addAll(locations);
+        Collections.shuffle(this.locations, rand);
+        size = this.locations.size();
+    }
     public Tour(ArrayList<Location> locations) {
-        this.locations = locations;
-        //Collections.shuffle(this.locations);
-        size = locations.size();
+        this.locations.addAll(locations);
+        size = this.locations.size();
     }
 
     public ArrayList<Location> getLocations() {
         return locations;
     }
 
-    public Tour(Tour route) {
-        this.locations.addAll(route.locations);
-    }
 
     public double getTotalDistance() {
         int size = this.locations.size();

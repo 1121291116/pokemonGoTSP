@@ -39,15 +39,17 @@ public class Driver {
             route.add(l);
         }
 
-        Tour r = new Tour(route);
-        r.printTour();
 
 
         if (alg.equals("LS1")) {
-            IterativeLocalSearch sol = new IterativeLocalSearch(r, city, cutoff, seed, path);
-            sol.run();
+            IterativeLocalSearch ils = new IterativeLocalSearch(city, cutoff, seed, path);
+            Tour r = new Tour(route, ils.getRandy());
+            r.printTour();
+            ils.run(r);
         } else if (alg.equals("LS2")) {
             SimulatedAnnealing sa = new SimulatedAnnealing(city, 1 - Math.pow(10, -6), 1.0, 0.00001, seed, cutoff);
+            Tour r = new Tour(route, sa.getRandy());
+            r.printTour();
             Tour best_route = sa.findtour(r);
             sa.output.close();
             System.out.println("Global minimum: " + best_route.getTotalStringDistance());

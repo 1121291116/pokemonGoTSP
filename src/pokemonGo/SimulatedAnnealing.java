@@ -10,7 +10,7 @@ public class SimulatedAnnealing {
     private double alpha;
     private double min_temperature;
     private int seed;
-    Random rand;
+    private Random randy;
     long cutoff_time;
     public PrintWriter output;
     String outputFile;
@@ -21,7 +21,7 @@ public class SimulatedAnnealing {
         this.init_temperature = init_temperature;
         this.min_temperature = min_temperature;
         this.alpha = alpha;
-        this.rand = new Random(seed);
+        this.randy = new Random(seed);
         this.seed = seed;
         this.cutoff_time = (long) (cutOff * Math.pow(10, 9));
         outputFile = city + "_LS2_" + cutOff + "_" + seed + ".trace";
@@ -52,7 +52,7 @@ public class SimulatedAnnealing {
 
     public boolean acceptance_probability(double dist_old, double dist_new, double temp) {
         double ap = Math.exp(((dist_old-dist_new)/Math.pow(10,4))/temp);
-        double r = this.rand.nextDouble();
+        double r = this.randy.nextDouble();
 
         if (ap > r) {
             return true;
@@ -98,8 +98,8 @@ public class SimulatedAnnealing {
         int cut1 = 0;
         int cut2 = 0;
         while (cut1 >= cut2) {
-            cut1 = (int) (candidate.getLocations().size() * rand.nextDouble());
-            cut2 = (int) (candidate.getLocations().size() * rand.nextDouble());
+            cut1 = (int) (candidate.getLocations().size() * randy.nextDouble());
+            cut2 = (int) (candidate.getLocations().size() * randy.nextDouble());
         }
         Location[] array = candidate.getLocations().toArray(new Location[length]);
 
@@ -118,6 +118,10 @@ public class SimulatedAnnealing {
         Tour newTour = new Tour(newList);
 
         return newTour;
+    }
+
+    public Random getRandy() {
+        return randy;
     }
 
 
