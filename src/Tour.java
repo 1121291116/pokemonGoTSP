@@ -1,24 +1,24 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Arrays;
+import java.util.Random;
 
 public class Tour {
     private ArrayList<Location> locations = new ArrayList<Location>();
 
-    public Tour(ArrayList<Location> locations, boolean shuffle) {
+    public Tour(ArrayList<Location> locations, Random rand) {
         this.locations.addAll(locations);
-        if (shuffle) {
-            Collections.shuffle(this.locations);
-        }
+        Collections.shuffle(this.locations, rand);
     }
+    public Tour(ArrayList<Location> locations) {
+        this.locations.addAll(locations);
+    }
+
 
     public ArrayList<Location> getLocations() {
         return locations;
     }
 
-    public Tour(Tour route) {
-        this.locations.addAll(route.locations);
-    }
 
     public double getTotalDistance() {
         int size = this.locations.size();

@@ -114,7 +114,7 @@ public class SimulatedAnnealing {
                 Arrays.asList(output)
         );
 
-        Tour newTour = new Tour(newList, false);
+        Tour newTour = new Tour(newList);
 
         return newTour;
     }
