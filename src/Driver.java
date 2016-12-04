@@ -43,7 +43,8 @@ public class Driver {
 
         if (alg.equals("LS1")) {
             IterativeLocalSearch ils = new IterativeLocalSearch(city, cutoff, seed, path);
-            Tour r = new Tour(route, ils.getRandy());
+//            Tour r = new Tour(route, ils.getRandy());
+            Tour r = new Tour(route);
             r.printTour();
             ils.run(r);
         } else if (alg.equals("LS2")) {
