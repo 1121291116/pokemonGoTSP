@@ -2,8 +2,8 @@
  * Created by chenzhijian on 11/19/16.
  */
 import pokemonGo.*;
-import java.io.BufferedReader;
-import java.io.FileReader;
+
+import java.io.*;
 import java.util.ArrayList;
 
 public class Driver {
@@ -46,20 +46,37 @@ public class Driver {
 //            Tour r = new Tour(route, ils.getRandy());
             Tour r = new Tour(route);
             r.printTour();
-            ils.run(r);
+            Tour bestTour = ils.run(r);
+            printSolution(bestTour, path, city, alg, cutoff, seed);
         } else if (alg.equals("LS2")) {
             SimulatedAnnealing sa = new SimulatedAnnealing(city, 1 - Math.pow(10, -6), 1.0, 0.00001, seed, cutoff, path);
             Tour r = new Tour(route, sa.getRandy());
             r.printTour();
-            Tour best_route = sa.findtour(r);
+            Tour bestTour = sa.findtour(r);
             sa.output.close();
-            System.out.println("Global minimum: " + best_route.getTotalStringDistance());
+            System.out.println("Global minimum: " + bestTour.getTotalStringDistance());
+            printSolution(bestTour, path, city, alg, cutoff, seed);
         } else {
             System.out.println("INVALID INPUT");
         }
+    }
 
+    public static void printSolution(Tour bestTour, String path, String city, String alg, int cutoff, int seed) throws FileNotFoundException, UnsupportedEncodingException {
+        String solutionFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".sol";
+        PrintWriter solution = new PrintWriter(solutionFile, "UTF-8");
 
+        ArrayList<Location> locations = bestTour.getLocations();
+        int cost;
+        int tourSize = bestTour.getSize();
+        solution.format("%d%n", (int)bestTour.getTotalDistance());
 
+        for (int i = 0; i < tourSize - 1; i++) {
+            cost = (int)locations.get(i).distanceTo(locations.get(i + 1));
+            solution.format("%d %d %d%n", locations.get(i).getId(), locations.get(i+1).getId(), cost);
+        }
 
+        cost = (int)locations.get(tourSize-1).distanceTo(locations.get(0));
+        solution.format("%d %d %d%n", locations.get(tourSize-1).getId(), locations.get(0).getId(), cost);
+        solution.close();
     }
 }

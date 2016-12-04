@@ -33,11 +33,12 @@ public class IterativeLocalSearch {
         System.out.println(outputFile);
     }
 
-    public void run(Tour t) {
-        bestTour = t;
+    public Tour run(Tour t) {
+        bestTour = new Tour(t.getLocations());
         constructSwapMap(t);
-        iterativeHillClimbing(bestTour);
+        iterativeHillClimbing(t);
         output.close();
+        return bestTour;
     }
 
 
@@ -67,15 +68,15 @@ public class IterativeLocalSearch {
             tour = hillClimbing(tour);
             double newTourLength = tour.getTotalDistance();
 
-            if (newTourLength < currentCost) {
-                bestTour = tour;
+            if (newTourLength <= currentCost) {
+                bestTour = new Tour(tour.getLocations());
                 this.currentCost = newTourLength;
             }
             tour = doubleBridgeMove(tour);
         }
 
-        tour.printTour();
-        return tour;
+        bestTour.printTour();
+        return bestTour;
     }
 
 
@@ -103,7 +104,7 @@ public class IterativeLocalSearch {
                         currentCost = localMin;
                         double ts = ((double)(System.currentTimeMillis() - startTime)) / 1000;
                         System.out.println(ts + "\t" + currentCost);
-                        output.format("%.3f\t%f%n", ts, currentCost);
+                        output.format("%.2f,%d%n", ts, (int)currentCost);
 
                     }
                 }
