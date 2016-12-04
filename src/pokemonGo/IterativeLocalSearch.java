@@ -1,3 +1,5 @@
+package pokemonGo;
+
 import pokemonGo.Tour;
 
 import java.util.*;
