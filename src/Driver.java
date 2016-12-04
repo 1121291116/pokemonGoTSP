@@ -31,14 +31,6 @@ public class Driver {
                     System.out.println(line);
         }
 
-        
-        // System.out.println("-------------------------------------------");
-        // while (i <= 4) {
-        //     System.out.println(br.readLine());
-        //     // br.readLine();
-        //     i++;
-        // }
-        // System.out.println("-------------------------------------------");
         while ((line = br.readLine()) != null && !line.contains("EOF")) {
             String[] splitLine = line.split(" ");
             int id = Integer.parseInt(splitLine[0]);
@@ -48,36 +40,16 @@ public class Driver {
             route.add(l);
         }
 
-
-
+        Tour r = new Tour(route);
+        r.printTour();
 
 
         if (alg.equals("LS1")) {
-            System.out.println("LS1");
+            ILS sol = new ILS(r, city, cutoff, seed, path);
+            sol.run();
         }
 
-        Tour r = new Tour(route);
-        r.printTour();
-        ILS sol = new ILS(r, city, cutoff, seed, path);        
-        // ILS sol = new ILS(r, city, cutoff, seed);
-        // ILS sol = new ILS(r);
-        sol.run();
 
-//        SimulatedAnnealing sa = new SimulatedAnnealing(0.95, 1.0, 0.00001, 1000);
-//        Tour best_route = sa.findtour(r);
-//        ArrayList<Location> best = best_route.getLocations();
-
-
-
-//        Set<Tour> s = sa.getVisited();
-////        Tour min = best_route;
-//        for (Tour x : s) {
-//            if (x.getTotalDistance() < min.getTotalDistance()) {
-//                min = x;
-//            }
-//        }
-//
-//        System.out.println(min.getTotalDistance());
 
 
     }
