@@ -5,6 +5,8 @@ import pokemonGo.*;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 public class Driver {
 
@@ -19,6 +21,8 @@ public class Driver {
         //Read corresponding input file
         BufferedReader br = new BufferedReader(new FileReader(city_file));
         String line = null;
+        HashMap m = new HashMap();
+
 
         ArrayList<Location> route = new ArrayList<>();
         int i = 0;
@@ -37,6 +41,7 @@ public class Driver {
             double lat = Double.parseDouble(splitLine[2]);
             Location l = new Location(id, longitude, lat);
             route.add(l);
+            m.put(id, l);
         }
 
 
@@ -56,7 +61,41 @@ public class Driver {
             sa.output.close();
             System.out.println("Global minimum: " + bestTour.getTotalStringDistance());
             printSolution(bestTour, path, city, alg, cutoff, seed);
-        } else {
+        } else if (alg.equals("APP1")) {
+            //MST-Approximation
+            MST mst = new MST(route);
+            LinkedList<Edge> MST = mst.buildMST();
+            MstApproximation mstApp = new MstApproximation(route.size(), MST);
+            LinkedList<Integer> TSP = mstApp.findTSP();
+            int previous = 1;
+            double total = 0;
+            for (int s : TSP){
+                Location temp = (Location) m.get(s);
+                total = total + temp.distanceTo((Location) m.get(previous));
+                previous = s;
+            }
+
+            for(int s : TSP){
+                System.out.print(s + ", ");
+            }
+            System.out.println(total);
+        } else if (alg.equals("APP2")) {
+            NearestNeighbor nearNb = new NearestNeighbor(m);
+            LinkedList<Integer> TSP = nearNb.findTSP();
+            int previous = 1;
+            double total = 0;
+            for (int s : TSP){
+                Location temp = (Location) m.get(s);
+                total = total + temp.distanceTo((Location) m.get(previous));
+                previous = s;
+            }
+
+            for(int s : TSP){
+                System.out.print(s + ", ");
+            }
+            System.out.println(total);
+        }
+        else {
             System.out.println("INVALID INPUT");
         }
     }
