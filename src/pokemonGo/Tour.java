@@ -28,6 +28,15 @@ public class Tour {
         size = this.locations.size();
     }
 
+    public void addLocationToTour(Location n) {
+        this.locations.add(n);
+    }
+
+    public boolean containsLocation(Location l) {
+        return this.locations.contains(l);
+    }
+
+
     public ArrayList<Location> getLocations() {
         return locations;
     }
