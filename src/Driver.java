@@ -94,6 +94,11 @@ public class Driver {
                 System.out.print(s + ", ");
             }
             System.out.println(total);
+        } else if (alg.equals("BNB")){
+            BnB bnb = new BnB(route, m, cutoff, seed, path, city);
+            Tour bestTour = bnb.findOptimal();
+            System.out.println(bestTour.toString());
+            bnbprintSolution(bestTour, path, city, alg, cutoff, seed);
         }
         else {
             System.out.println("INVALID INPUT");
@@ -109,13 +114,29 @@ public class Driver {
         int tourSize = bestTour.getSize();
         solution.format("%d%n", (int)bestTour.getTotalDistance());
 
-        for (int i = 0; i < tourSize - 1; i++) {
+        for (int i = 0; i < tourSize + 1; i++) {
             cost = (int)locations.get(i).distanceTo(locations.get(i + 1));
             solution.format("%d %d %d%n", locations.get(i).getId(), locations.get(i+1).getId(), cost);
         }
 
         cost = (int)locations.get(tourSize-1).distanceTo(locations.get(0));
         solution.format("%d %d %d%n", locations.get(tourSize-1).getId(), locations.get(0).getId(), cost);
+        solution.close();
+    }
+
+    public static void bnbprintSolution(Tour bestTour, String path, String city, String alg, int cutoff, int seed) throws FileNotFoundException, UnsupportedEncodingException {
+        String solutionFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".sol";
+        PrintWriter solution = new PrintWriter(solutionFile, "UTF-8");
+
+        ArrayList<Location> locations = bestTour.getLocations();
+        int cost;
+        int tourSize = bestTour.getSize();
+        solution.format("%d%n", (int)bestTour.getTotalDistance());
+
+        for (int i = 0; i < tourSize + 1; i++) {
+            cost = (int)locations.get(i).distanceTo(locations.get(i + 1));
+            solution.format("%d %d %d%n", locations.get(i).getId(), locations.get(i+1).getId(), cost);
+        }
         solution.close();
     }
 }

@@ -74,10 +74,11 @@ public class BnB {
     }
 
 
-    public double findOptimal(){
-        long startTime = System.nanoTime();
+    public Tour findOptimal(){
+
         PriorityQueue<Node> queue = new PriorityQueue<Node>(comparator);
-        double bestTourCost = initial;
+        double bestTourCost = Double.MAX_VALUE / 100;
+        System.out.println(bestTourCost);
         ReducedMatrix initialMatrix = new ReducedMatrix(adj);
         initialMatrix.rowReduction();
         initialMatrix.columnReduction();
@@ -85,40 +86,41 @@ public class BnB {
         Node start = new Node(dumParent, locations.get(1), new Tour(new ArrayList<>()), initialMatrix);
         start.appendPath();
         queue.add(start);
+        int size = 0;
+        Node current = new Node(-1);
+        Node best = new Node(-1);
         while(!queue.isEmpty()) {
-            double parentLB = queue.peek().computeLowerBound();
-            if (parentLB < bestTourCost) {
-                Node current = queue.poll();
+            current = queue.poll();
+            double parentLB = current.computeLowerBound();
+            if (current.getLowerBound() < bestTourCost) {
                 current.setLevel(current.getParent().getLevel() + 1);
+                System.out.println("ID: " + current.getLocation().getId() + " Level: " + current.getLevel() + " LB: " + current.getLowerBound());
+                size = queue.size();
                 if (current.getLevel() == n - 1) {
+                    current.appendPath(start.getLocation());
+                    double currentPath = current.computePath();
                     if (parentLB < bestTourCost) {
                         bestTourCost = parentLB;
-                        long timeStamp = System.nanoTime();
-                        System.out.println((timeStamp-startTime)/1e9 + "\t" + bestTourCost);
-                        output.println((timeStamp-startTime)/1e9 + "," + bestTourCost);
-                        bestTour = current.getPath();
+                        best = current;
                     }
-                }
-                else {
-                    for (int i = 2; i <= n; i ++) {
+                } else {
+                    for (int i = 2; i <= n; i++) {
                         if (!current.getPath().containsLocation(locations.get(i))) {
                             Node temp = new Node(current, locations.get(i), current.getPath(), current.getRm());
                             temp.appendPath();
                             temp.computeLowerBound();
-
                             if (temp.getLowerBound() < bestTourCost) {
                                 queue.add(temp);
                             }
                         }
                     }
                 }
-            } else {
-                queue.remove();
             }
         }
-        long endTime = System.nanoTime();
-        long totalRunTime = endTime - startTime;
-        System.out.println("RunTime: " + totalRunTime/1e9);
-        return bestTourCost;
+
+//        System.out.println("Queue size: " + size);
+        System.out.println(best.getPath().toString());
+        System.out.println(bestTourCost);
+        return best.getPath();
     }
 }
