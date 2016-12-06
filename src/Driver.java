@@ -114,7 +114,7 @@ public class Driver {
         int tourSize = bestTour.getSize();
         solution.format("%d%n", (int)bestTour.getTotalDistance());
 
-        for (int i = 0; i < tourSize + 1; i++) {
+        for (int i = 0; i < tourSize -1; i++) {
             cost = (int)locations.get(i).distanceTo(locations.get(i + 1));
             solution.format("%d %d %d%n", locations.get(i).getId(), locations.get(i+1).getId(), cost);
         }

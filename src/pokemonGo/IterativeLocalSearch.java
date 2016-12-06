@@ -70,10 +70,10 @@ public class IterativeLocalSearch {
 
             if (newTourLength < bestTour.getTotalDistance()) {
                 bestTour = new Tour(tour.getLocations());
-                bestTour.printTour();
+//                bestTour.printTour();
 //                this.currentCost = newTourLength;
             }
-            tour = doubleBridgeMove(tour);
+            tour = doubleBridgeMove(bestTour);
         }
 
         return bestTour;
@@ -101,7 +101,7 @@ public class IterativeLocalSearch {
                     swapped = new HashSet<>();
 
                     if (localMin < bestTour.getTotalDistance()) {
-                        System.out.println("********");
+//                        System.out.println("********");
 //                        currentCost = localMin;
                         double ts = ((double)(System.currentTimeMillis() - startTime)) / 1000;
                         System.out.println(ts + "\t" + tour.getTotalDistance());
