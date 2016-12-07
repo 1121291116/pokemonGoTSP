@@ -11,30 +11,43 @@ import java.util.LinkedList;
 public class Driver {
 
     public static void main(String[] args) throws Exception {
-        String city_file = args[0];
-        String alg = args[1];
-        int cutoff = Integer.parseInt(args[2]);
-        int seed = Integer.parseInt(args[3]);
-        String path = args[4];
 
-        //Check validity
+        //Validate enough arguments
+        if (args.length < 8) {
+            System.out.println("Please enter arguments required correctly.");
+            System.exit(-1);
+        }
+        String city = args[1];
+
+        String city_file = city + ".tsp";
+
+
+        String alg = args[3];
+        int cutoff = Integer.parseInt(args[5]);
+        int seed = Integer.parseInt(args[7]);
+
+
+
+
+        String path = "./";
 
         //Read corresponding input file
         BufferedReader br = new BufferedReader(new FileReader(city_file));
         String line = null;
-        HashMap m = new HashMap();
+        HashMap<Integer, Location> m = new HashMap<>();
 
 
         ArrayList<Location> route = new ArrayList<>();
         int i = 0;
-        String city = br.readLine().split(" ")[1];
 
-        while(i <= 3) {
+
+        while(i <= 4) {
             line = br.readLine();
             i++;
-            System.out.println(line);
+            // System.out.println(line);
         }
 
+        //Read in the files
         while ((line = br.readLine()) != null && !line.contains("EOF")) {
             String[] splitLine = line.split(" ");
             int id = Integer.parseInt(splitLine[0]);
@@ -46,21 +59,21 @@ public class Driver {
         }
 
 
-
+        //Run LS1
         if (alg.equals("LS1")) {
             IterativeLocalSearch ils = new IterativeLocalSearch(city, cutoff, seed, path);
-//            Tour r = new Tour(route, ils.getRandy());
+
             Tour r = new Tour(route);
-            r.printTour();
+
             Tour bestTour = ils.run(r);
             printSolution(bestTour, path, city, alg, cutoff, seed);
-        } else if (alg.equals("LS2")) {
+        } else if (alg.equals("LS2")) { //Run LS2
             SimulatedAnnealing sa = new SimulatedAnnealing(city, 1 - Math.pow(10, -6), 1.0, 0.00001, seed, cutoff, path);
             Tour r = new Tour(route, sa.getRandy());
-            r.printTour();
+
             Tour bestTour = sa.findtour(r);
             sa.output.close();
-            System.out.println("Global minimum: " + bestTour.getTotalStringDistance());
+            // System.out.println("Global minimum: " + bestTour.getTotalStringDistance());
             printSolution(bestTour, path, city, alg, cutoff, seed);
         } else if (alg.equals("APP1")) {
             //MST-Approximation
@@ -71,8 +84,8 @@ public class Driver {
             int previous = 1;
             double total = 0;
             for (int s : TSP){
-                Location temp = (Location) m.get(s);
-                total = total + temp.distanceTo((Location) m.get(previous));
+                Location temp = m.get(s);
+                total = total + temp.distanceTo(m.get(previous));
                 previous = s;
             }
 
@@ -86,15 +99,15 @@ public class Driver {
             int previous = 1;
             double total = 0;
             for (int s : TSP){
-                Location temp = (Location) m.get(s);
-                total = total + temp.distanceTo((Location) m.get(previous));
+                Location temp = m.get(s);
+                total = total + temp.distanceTo(m.get(previous));
                 previous = s;
             }
 
         } else if (alg.equals("BNB")){
             BnB bnb = new BnB(route, m, cutoff, seed, path, city);
             Tour bestTour = bnb.findOptimal();
-            System.out.println(bestTour.toString());
+            // System.out.println(bestTour.toString());
             bnbPrintSolution(bestTour, path, city, alg, cutoff, seed);
         }
         else {

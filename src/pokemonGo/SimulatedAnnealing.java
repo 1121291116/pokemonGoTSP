@@ -80,7 +80,7 @@ public class SimulatedAnnealing {
                 if (dist_new < globalBest.getTotalDistance()) {
                     globalBest = new_tour;
                     long timestamp = System.nanoTime() - start_time;
-                    System.out.println(timestamp/1e9 + "\t" + globalBest.getTotalStringDistance());
+                    // System.out.println(timestamp/1e9 + "\t" + globalBest.getTotalStringDistance());
                     output.format("%.2f,%d%n", timestamp/1e9, (int)globalBest.getTotalDistance());
 
                 }

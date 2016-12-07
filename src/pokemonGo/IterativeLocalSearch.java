@@ -30,7 +30,7 @@ public class IterativeLocalSearch {
         randy = new Random(seed);
         outputFile = path + city + "_LS1_" + cutoff + "_" + seed + ".trace";
         this.output = new PrintWriter(outputFile, "UTF-8");
-        System.out.println(outputFile);
+        // System.out.println(outputFile);
     }
 
     public Tour run(Tour t) {
@@ -115,7 +115,7 @@ public class IterativeLocalSearch {
 
                     if (localMin < bestTour.getTotalDistance()) {
                         double ts = ((double)(System.currentTimeMillis() - startTime)) / 1000;
-                        System.out.println(ts + "\t" + tour.getTotalDistance());
+                        // System.out.println(ts + "\t" + tour.getTotalDistance());
                         output.format("%.2f,%d%n", ts, (int)tour.getTotalDistance());
 
                     }
