@@ -91,21 +91,27 @@ public class Driver {
                 previous = s;
             }
 
-            for(int s : TSP){
-                System.out.print(s + ", ");
-            }
-            System.out.println(total);
         } else if (alg.equals("BNB")){
             BnB bnb = new BnB(route, m, cutoff, seed, path, city);
             Tour bestTour = bnb.findOptimal();
             System.out.println(bestTour.toString());
-            bnbprintSolution(bestTour, path, city, alg, cutoff, seed);
+            bnbPrintSolution(bestTour, path, city, alg, cutoff, seed);
         }
         else {
             System.out.println("INVALID INPUT");
         }
     }
 
+    /** Print a solution to a sol file, used for both local search and approximation algorithms
+     * @param bestTour
+     * @param path
+     * @param city
+     * @param alg
+     * @param cutoff
+     * @param seed
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
     public static void printSolution(Tour bestTour, String path, String city, String alg, int cutoff, int seed) throws FileNotFoundException, UnsupportedEncodingException {
         String solutionFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".sol";
         PrintWriter solution = new PrintWriter(solutionFile, "UTF-8");
@@ -125,7 +131,17 @@ public class Driver {
         solution.close();
     }
 
-    public static void bnbprintSolution(Tour bestTour, String path, String city, String alg, int cutoff, int seed) throws FileNotFoundException, UnsupportedEncodingException {
+    /** Print a solution to a sol file, used for both local search and approximation algorithms
+     * @param bestTour
+     * @param path
+     * @param city
+     * @param alg
+     * @param cutoff
+     * @param seed
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public static void bnbPrintSolution(Tour bestTour, String path, String city, String alg, int cutoff, int seed) throws FileNotFoundException, UnsupportedEncodingException {
         String solutionFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".sol";
         PrintWriter solution = new PrintWriter(solutionFile, "UTF-8");
 
