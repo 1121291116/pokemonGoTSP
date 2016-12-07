@@ -98,7 +98,7 @@ public class BnB {
         queue.add(start);
         Node best = new Node(-1);
         while(!queue.isEmpty()) {
-            if ((System.nanoTime() - startTime) / 1e9 < (long) 600) {
+            if ((System.nanoTime() - startTime) / 1e9 < cutoff_time) {
                 Node current = queue.poll();
                 double parentLB = current.computeLowerBound();
                 if (parentLB < bestTourCost) {
