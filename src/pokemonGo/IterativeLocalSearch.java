@@ -42,6 +42,9 @@ public class IterativeLocalSearch {
     }
 
 
+    /**The constructs a hashmap to store all 2-opt possibilities for a sotuion of size n
+     * @param t is the original tour taken in from the input
+     */
     private void constructSwapMap(Tour t) {
         swapMap = new HashMap<>();
         swapIds = new ArrayList<>();
