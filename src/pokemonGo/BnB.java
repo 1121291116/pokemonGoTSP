@@ -97,30 +97,35 @@ public class BnB {
         start.appendPath();
         queue.add(start);
         Node best = new Node(-1);
-        while(!queue.isEmpty() && (System.nanoTime() - startTime)/1e9 < 600) {
-            Node current = queue.poll();
-            double parentLB = current.computeLowerBound();
-            if (parentLB < bestTourCost) {
-                current.setLevel(current.getParent().getLevel() + 1);
-                if (current.getLevel() == n - 1) {
+        while(!queue.isEmpty()) {
+            if ((System.nanoTime() - startTime) / 1e9 < (long) 600) {
+                Node current = queue.poll();
+                double parentLB = current.computeLowerBound();
+                if (parentLB < bestTourCost) {
+                    current.setLevel(current.getParent().getLevel() + 1);
+                    if (current.getLevel() == n - 1) {
 //                    current.appendPath(start.getLocation());
-                    if (parentLB < bestTourCost) {
-                        bestTourCost = parentLB;
-                        best = current;
-                        output.format("%.2f,%d%n", (System.nanoTime() - startTime)/1e9, (int)bestTourCost);
-                    }
-                } else {
-                    for (int i = 2; i <= n; i++) {
-                        if (!current.getPath().containsLocation(locations.get(i))) {
-                            Node temp = new Node(current, locations.get(i), current.getPath(), current.getRm());
-                            temp.appendPath();
-                            temp.computeLowerBound();
-                            if (temp.getLowerBound() < bestTourCost) {
-                                queue.add(temp);
+                        if (parentLB < bestTourCost) {
+                            bestTourCost = parentLB;
+                            best = current;
+                            output.format("%.2f,%d%n", (System.nanoTime() - startTime) / 1e9, (int) bestTourCost);
+                        }
+                    } else {
+                        for (int i = 2; i <= n; i++) {
+                            if (!current.getPath().containsLocation(locations.get(i))) {
+                                Node temp = new Node(current, locations.get(i), current.getPath(), current.getRm());
+                                temp.appendPath();
+                                temp.computeLowerBound();
+                                if (temp.getLowerBound() < bestTourCost) {
+                                    queue.add(temp);
+                                }
                             }
                         }
                     }
                 }
+            } else {
+                output.close();
+                return best.getPath();
             }
         }
         output.close();
