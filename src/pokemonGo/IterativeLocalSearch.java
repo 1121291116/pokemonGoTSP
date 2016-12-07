@@ -62,6 +62,11 @@ public class IterativeLocalSearch {
         }
     }
 
+    /**The method keeps doing the HillClimbing, record best solution found, purturb the tour found at the end of each
+     * iteration and send it to the next one
+     * @param tour is the original tour taken in from the input
+     * @return return the best solution found
+     */
     private Tour iterativeHillClimbing(Tour tour) {
         this.currentCost = bestTour.getTotalDistance();
         this.startTime = System.currentTimeMillis();
@@ -76,17 +81,22 @@ public class IterativeLocalSearch {
 //                bestTour.printTour();
 //                this.currentCost = newTourLength;
             }
-            tour = doubleBridgeMove(bestTour);
+            //tour = doubleBridgeMove(bestTour);
+            tour = doubleBridgeMove(tour);
+
         }
 
         return bestTour;
     }
 
 
+    /**This method runs one hillClimbing algorithm
+     * it keeps updating the tour as long as it finds a better one in the neighborhood.
+     * the algorithm stops once it cannot find any better solution in the neighborhood
+     * @param tour
+     * @return the local best solution
+     */
     private Tour hillClimbing(Tour tour) {
-        //evaluate current tour cost
-        //generate new tours based on current
-        //compare
         double localMin = tour.getTotalDistance();
         double newCost;
         HashSet<Integer> swapped = new HashSet<>();
@@ -104,8 +114,6 @@ public class IterativeLocalSearch {
                     swapped = new HashSet<>();
 
                     if (localMin < bestTour.getTotalDistance()) {
-//                        System.out.println("********");
-//                        currentCost = localMin;
                         double ts = ((double)(System.currentTimeMillis() - startTime)) / 1000;
                         System.out.println(ts + "\t" + tour.getTotalDistance());
                         output.format("%.2f,%d%n", ts, (int)tour.getTotalDistance());
@@ -120,16 +128,20 @@ public class IterativeLocalSearch {
             }
         }
         timeElapsed = System.currentTimeMillis() - startTime;
-        // return localBest;
         return tour;
     }
 
-    private Tour twoOpt(Tour candidate, int swapId) {
-        int length = candidate.getSize();
+    /**This method deos a 2-opt operation to a tour
+     * @param tour
+     * @param swapId matches with a 2-opt possibility to reach a neightbor
+     * @return
+     */
+    private Tour twoOpt(Tour tour, int swapId) {
+        int length = tour.getSize();
         Location[] output = new Location[length];
         int cut1 = swapMap.get(swapId)[0];
         int cut2 = swapMap.get(swapId)[1];
-        Location[] array = candidate.getLocations().toArray(new Location[length]);
+        Location[] array = tour.getLocations().toArray(new Location[length]);
 
         System.arraycopy(array, 0, output, 0, cut1);
         Location[] middle = new Location[cut2 - cut1];
@@ -147,7 +159,10 @@ public class IterativeLocalSearch {
         return newTour;
     }
 
-    // Implement double bridge move to create a perturbation
+    /** This method implements double bridge move to create a perturbation
+     * @param tour
+     * @return
+     */
     private Tour doubleBridgeMove(Tour tour) {
         int length = tour.getLocations().size();
         Location[] perturbed = new Location[length];
