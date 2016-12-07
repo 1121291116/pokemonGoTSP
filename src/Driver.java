@@ -16,6 +16,7 @@ public class Driver {
         int cutoff = Integer.parseInt(args[2]);
         int seed = Integer.parseInt(args[3]);
         String path = args[4];
+
         //Check validity
 
         //Read corresponding input file
@@ -133,10 +134,16 @@ public class Driver {
         int tourSize = bestTour.getSize();
         solution.format("%d%n", (int)bestTour.getTotalDistance());
 
-        for (int i = 0; i < tourSize + 1; i++) {
-            cost = (int)locations.get(i).distanceTo(locations.get(i + 1));
+        for (int i = 0; i < tourSize; i++) {
+//
+            cost = (int) Math.ceil(locations.get(i).distanceTo(locations.get(i + 1)));
             solution.format("%d %d %d%n", locations.get(i).getId(), locations.get(i+1).getId(), cost);
+
+
         }
+        cost = (int) locations.get(tourSize).distanceTo(locations.get(0));
+        solution.format("%d %d %d%n", locations.get(tourSize).getId(), locations.get(0).getId(), cost);
+
         solution.close();
     }
 }
