@@ -1,16 +1,17 @@
 package pokemonGo;
 
 /**
+ * a class which stores variables we need in branch and bound. 
  * Created by youssefhammoud on 12/2/16.
  */
 public class Node {
-    private Node parent;
-    private double lowerBound;
-    private Location location;
-    private int level;
-    private Tour path;
-    ReducedMatrix rm;
-    boolean notInQueue;
+    private Node parent;    // the last node
+    private double lowerBound;   
+    private Location location;  
+    private int level;   
+    private Tour path;   // partial path for the node
+    ReducedMatrix rm;   //reduced matrix that can calculate the lower bound
+    boolean notInQueue;     // check if it has been included in the queue
     private int id;
 
     public Node(int level) {
@@ -39,7 +40,7 @@ public class Node {
             this.rm = new ReducedMatrix(rm);
         }
     }
-
+    // huge amount of getters and setters
     public int getLevel() {
         return this.level;
     }
@@ -110,7 +111,7 @@ public class Node {
     public double computePath() {
         return this.path.getTotalDistance();
     }
-
+    // compute the lower bound based on the reduced matrix
     public double computeLowerBound() {
         if (parent.getLevel() == -1) {
             this.lowerBound = this.getRm().getReductionCost();
@@ -125,7 +126,7 @@ public class Node {
 
         return this.lowerBound;
     }
-
+    // add node to the path
     public void appendPath() {
         this.path.addLocationToTour(this.location);
     }
@@ -134,6 +135,7 @@ public class Node {
         this.path.addLocationToTour(l);
     }
 
+    // update the reduced matrix for invalid nodes
     public void setNodeAndParentRMToInfinity() {
         parent.getRm().getRm()[this.location.getId()][this.parent.location.getId()] = Integer.MAX_VALUE;
     }

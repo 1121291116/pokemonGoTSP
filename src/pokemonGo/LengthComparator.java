@@ -1,5 +1,8 @@
 package pokemonGo;
-
+/*
+	The comparator for priority queue used in MST approximation
+	created by Yichuan Wang
+ */
 import java.util.Comparator;
 
 public class LengthComparator implements Comparator<Edge>{

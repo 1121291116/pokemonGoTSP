@@ -1,4 +1,6 @@
-
+/*
+    An implementation of simuated annealing
+ */
 package pokemonGo;
 import java.io.IOException;
 import java.io.PrintWriter;

@@ -1,6 +1,7 @@
 package pokemonGo;
 
 /**
+ * Used for calculating the lower bound. 
  * Created by youssefhammoud on 12/3/16.
  */
 

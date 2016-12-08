@@ -1,4 +1,8 @@
 package pokemonGo;
+/*
+	An implementation of Kruskal's algorithm.
+	Created by Yichuan Wang
+ */
 
 import java.util.*;
 

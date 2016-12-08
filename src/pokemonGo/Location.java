@@ -1,5 +1,7 @@
 package pokemonGo;
-
+/*
+    A class that maintains the location including id, longtitude and latitude
+ */
 public class Location {
 
     private int id;

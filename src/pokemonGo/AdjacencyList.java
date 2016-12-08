@@ -1,3 +1,7 @@
+/*
+	Implement a adjancency List for detecting cycles in MST
+	Created by Yichuan Wang
+ */
 package pokemonGo;
 import java.util.*;
 
@@ -6,6 +10,7 @@ public class AdjacencyList {
 	private int num_vertices;
 	private LinkedList<Integer> adj[];
 	
+	// Constructor
 	public AdjacencyList(int n){
 		num_vertices = n;
 		adj  = new LinkedList[n];

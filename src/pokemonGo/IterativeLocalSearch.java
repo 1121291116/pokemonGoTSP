@@ -1,3 +1,8 @@
+/** 
+ * This class takes in parameters and perform a iterative local serach
+ */
+
+
 package pokemonGo;
 
 
@@ -6,6 +11,7 @@ import java.io.PrintWriter;
 import java.io.IOException;
 
 /**
+ * The implementation of Iterative local search
  * Created by chenzhijian on 11/19/16.
  */
 public class IterativeLocalSearch {

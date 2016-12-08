@@ -1,4 +1,5 @@
  /**
+  * A class stores locations that forms a path
  * Created by chenzhijian on 11/19/16.
  */
  package pokemonGo;
