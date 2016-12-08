@@ -24,6 +24,11 @@ public class Location {
         return longitude;
     }
 
+    /**
+     * Get the distance of current location to a new location
+     * @param  location a location
+     * @return          The distance
+     */
     public double distanceTo(Location location) {
         double longDist = Math.abs(getLongitude() - location.getLongitude());
         double latDist = Math.abs(getLatitude() - location.getLatitude());

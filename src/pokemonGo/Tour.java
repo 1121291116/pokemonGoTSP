@@ -28,20 +28,36 @@ public class Tour {
         size = this.locations.size();
     }
 
+    /**
+     * Add a location to a tour
+     * @param n location id
+     */
     public void addLocationToTour(Location n) {
         this.locations.add(n);
     }
 
+    /** 
+     *      *  Check if the tour contians the location
+     * @param  l a location
+     * @return   If the tour conatins this location
+     */
     public boolean containsLocation(Location l) {
         return this.locations.contains(l);
     }
 
 
+    /** 
+     * Geth all the locations from the tour
+     * @return A list of the location
+     */
     public ArrayList<Location> getLocations() {
         return locations;
     }
 
-
+    /**
+     * Get the distance of the tour
+     * @return Total distance of the tour
+     */
     public double getTotalDistance() {
         int size = this.locations.size();
         return this.locations.stream().mapToDouble(x -> {
@@ -70,6 +86,9 @@ public class Tour {
         return Arrays.toString(locations.toArray());
     }
 
+    /**
+     * Print the tour
+     */
     public void printTour() {
         for (int i = 0; i < locations.size(); i ++) {
             System.out.print(locations.get(i).getId() + ", ");

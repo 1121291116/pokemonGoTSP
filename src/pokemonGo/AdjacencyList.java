@@ -14,10 +14,17 @@ public class AdjacencyList {
 		}
 	}
 	
+	/**
+	 * Get number of vertices 
+	 * @return number of vertices 	 
+	 */
 	public int getNumofVer(){
 		return num_vertices;
 	}
 	
+	/**
+	 * Print the list 
+	 */
 	public void printAll(){
 		System.out.println("Current A list: ");
 		for(int i = 0; i < num_vertices; i ++){
@@ -28,11 +35,19 @@ public class AdjacencyList {
 		}
 	}
 	
+	/**
+	 * Add an edge to the adjacency list
+	 * @param e The edge to be added
+	 */
 	public void addEdge(Edge e){
 		adj[e.getStarting()].add(e.getEnding());
 		adj[e.getEnding()].add(e.getStarting());
 	}
 	
+	/** 
+	 * Remove an edge
+	 * @param e The edge to remove
+	 */
 	public void removeEdge(Edge e){
 		int u = e.getStarting();
 		int v = e.getEnding();
@@ -42,6 +57,13 @@ public class AdjacencyList {
 		adj[v].remove(index);
 	}
 	
+	/**
+	 * Detect if there is a cycle
+	 * @param  cur     current node
+	 * @param  visited visited node
+	 * @param  parent  parent node
+	 * @return         Whether there is a cycle
+	 */
 	public boolean detectCycle(int cur, boolean[] visited, int parent){
 		
 		int temp;

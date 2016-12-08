@@ -84,7 +84,10 @@ public class BnB {
         }
     }
 
-
+    /**
+     * Find the optimal tour
+     * @return the optimal tour
+     */
     public Tour findOptimal() {
         long startTime = System.nanoTime();
         PriorityQueue<Node> queue = new PriorityQueue<Node>(comparator);
