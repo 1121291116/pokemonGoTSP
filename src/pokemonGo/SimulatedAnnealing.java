@@ -30,26 +30,52 @@ public class SimulatedAnnealing {
 
     }
 
+    /**
+     * Get the initial temparture
+     * @return initial temparture
+     */
     public double getInit_temperature() {
         return init_temperature;
     }
-
+    /**
+     * Get the alpha value
+     * @return alpha
+     */
     public double getAlpha() {
         return alpha;
     }
 
+    /**
+     * Get the minimum temperature
+     * @return minimum temperature      
+     */
     public double getMin_temperature() {
         return min_temperature;
     }
 
+    /**
+     * Get the seed
+     * @return seed
+     */
     public int getSeed() {
         return seed;
     }
 
+    /**
+     * Get the visited set
+     * @return visited     
+     */
     public Set<Tour> getVisited() {
         return visited;
     }
 
+    /**
+     * Calculate the accpetance probability and evaluate
+     * @param  dist_old  olution qualtity of the previous search
+     * @param  dist_new solution qualtity of the curr search
+     * @param  temp     tempearture
+     * @return  whether should accpet the current solution   
+     */
     public boolean acceptance_probability(double dist_old, double dist_new, double temp) {
         double ap = Math.exp(((dist_old-dist_new)/Math.pow(10,4))/temp);
         double r = this.randy.nextDouble();
@@ -60,6 +86,11 @@ public class SimulatedAnnealing {
         return false;
     }
 
+    /**
+     * nitiate a simulated annealing search
+     * @param  tour A initial tour to start
+     * @return      The best tour found
+     */
     public Tour findtour(Tour tour) {
         long start_time = System.nanoTime();
         double temperature = getInit_temperature();
@@ -91,6 +122,11 @@ public class SimulatedAnnealing {
     }
 
 
+    /** 
+     * Helper method for generating a new tour based on perturbation
+     * @param  candidate current tour
+     * @return         a  new tour
+     */
     private Tour twoOpt(Tour candidate) {
 
         int length = candidate.getLocations().size();
@@ -120,6 +156,10 @@ public class SimulatedAnnealing {
         return newTour;
     }
 
+    /**
+     * Get the random number generator
+     * @return random number generator
+     */
     public Random getRandy() {
         return randy;
     }
