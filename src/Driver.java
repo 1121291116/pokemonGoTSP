@@ -32,6 +32,7 @@ public class Driver {
         String path = "./";
 
         //Read corresponding input file
+
         BufferedReader br = new BufferedReader(new FileReader(city_file));
         String line = null;
         HashMap<Integer, Location> m = new HashMap<>();
@@ -40,14 +41,15 @@ public class Driver {
         ArrayList<Location> route = new ArrayList<>();
         int i = 0;
 
+        //Get rid of the first 4 lines
 
         while(i <= 4) {
             line = br.readLine();
             i++;
-            // System.out.println(line);
+
         }
 
-        //Read in the files
+        //Read in from the files
         while ((line = br.readLine()) != null && !line.contains("EOF")) {
             String[] splitLine = line.split(" ");
             int id = Integer.parseInt(splitLine[0]);
@@ -73,7 +75,6 @@ public class Driver {
 
             Tour bestTour = sa.findtour(r);
             sa.output.close();
-            // System.out.println("Global minimum: " + bestTour.getTotalStringDistance());
             printSolution(bestTour, path, city, alg, cutoff, seed, 1);
         } else if (alg.equals("APP1")) {
             //MST-Approximation
@@ -96,7 +97,7 @@ public class Driver {
             output.format("%.2f,%d%n", time, (int)bestTour.getTotalDistance());
             output.close();
 
-        } else if (alg.equals("APP2")) {
+        } else if (alg.equals("APP2")) { //Run Approximation using nearest neighbor
             NearestNeighbor nearNb = new NearestNeighbor(m);
             long start = System.nanoTime();
             LinkedList<Integer> TSP = nearNb.findTSP();
@@ -114,7 +115,7 @@ public class Driver {
             output.format("%.2f,%d%n", time, (int)bestTour.getTotalDistance());
             output.close();
 
-        } else if (alg.equals("BNB")){
+        } else if (alg.equals("BNB")){ //RUN branch and bound
             BnB bnb = new BnB(route, m, cutoff, seed, path, city);
             Tour bestTour = bnb.findOptimal();
             // System.out.println(bestTour.toString());
@@ -163,7 +164,7 @@ public class Driver {
 
 
 
-    /** Print a solution to a sol file, used for both local search and approximation algorithms
+    /** Print a solution to a sol file, used for branch and bound
      * @param bestTour
      * @param path
      * @param city

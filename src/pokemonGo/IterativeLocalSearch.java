@@ -33,6 +33,11 @@ public class IterativeLocalSearch {
         // System.out.println(outputFile);
     }
 
+    /**
+     * Initiate a local search 
+     * @param  t A tour to start
+     * @return   the best tour found from search
+     */
     public Tour run(Tour t) {
         bestTour = new Tour(t.getLocations());
         constructSwapMap(t);
@@ -134,7 +139,7 @@ public class IterativeLocalSearch {
     /**This method deos a 2-opt operation to a tour
      * @param tour
      * @param swapId matches with a 2-opt possibility to reach a neightbor
-     * @return
+     * @return a new tour
      */
     private Tour twoOpt(Tour tour, int swapId) {
         int length = tour.getSize();
@@ -161,7 +166,7 @@ public class IterativeLocalSearch {
 
     /** This method implements double bridge move to create a perturbation
      * @param tour
-     * @return
+     * @return a new tour
      */
     private Tour doubleBridgeMove(Tour tour) {
         int length = tour.getLocations().size();
