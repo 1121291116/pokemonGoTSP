@@ -58,11 +58,7 @@ public class MstApproximation {
 				m.put(i," ");
 			}
 		}
-		
-		if(TSP.getLast() != 1){
-			TSP.add(1);
-		}
-		
+				
 		return TSP;
 	}
 }

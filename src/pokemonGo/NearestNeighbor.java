@@ -32,9 +32,7 @@ public class NearestNeighbor {
 			TSP.add(minVertex);
 			unvisited.remove(minVertex);
 		}
-		if(minVertex != 1){
-			TSP.add(1);
-		}
+		
 		return TSP;
 	}
 	

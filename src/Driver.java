@@ -78,31 +78,40 @@ public class Driver {
         } else if (alg.equals("APP1")) {
             //MST-Approximation
             MST mst = new MST(route);
+            long start = System.nanoTime();
             LinkedList<Edge> MST = mst.buildMST();
             MstApproximation mstApp = new MstApproximation(route.size(), MST);
             LinkedList<Integer> TSP = mstApp.findTSP();
-            int previous = 1;
-            double total = 0;
-            for (int s : TSP){
-                Location temp = m.get(s);
-                total = total + temp.distanceTo(m.get(previous));
-                previous = s;
+            long end = System.nanoTime();
+            double time = (end - start) / 1e9;
+            ArrayList<Location> result= new ArrayList<Location>();
+            for (int wyc : TSP){
+                result.add(m.get(wyc));
             }
+            Tour bestTour = new Tour(result);
+            printSolution(bestTour, path, city, alg, cutoff, seed);
+            String outputFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".trace";
+            PrintWriter output = new PrintWriter(outputFile, "UTF-8");
+            output.format("%.2f,%d%n", time, (int)bestTour.getTotalDistance());
+            output.close();
 
-            for(int s : TSP){
-                System.out.print(s + ", ");
-            }
-            System.out.println(total);
         } else if (alg.equals("APP2")) {
             NearestNeighbor nearNb = new NearestNeighbor(m);
+            long start = System.nanoTime();
             LinkedList<Integer> TSP = nearNb.findTSP();
-            int previous = 1;
-            double total = 0;
-            for (int s : TSP){
-                Location temp = m.get(s);
-                total = total + temp.distanceTo(m.get(previous));
-                previous = s;
+            long end = System.nanoTime();
+            double time = (end - start) / 1e9;
+            
+            ArrayList<Location> result= new ArrayList<Location>();
+            for (int wyc : TSP){
+                result.add(m.get(wyc));
             }
+            Tour bestTour = new Tour(result);
+            printSolution(bestTour, path, city, alg, cutoff, seed);
+            String outputFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".trace";
+            PrintWriter output = new PrintWriter(outputFile, "UTF-8");
+            output.format("%.2f,%d%n", time, (int)bestTour.getTotalDistance());
+            output.close();
 
         } else if (alg.equals("BNB")){
             BnB bnb = new BnB(route, m, cutoff, seed, path, city);
