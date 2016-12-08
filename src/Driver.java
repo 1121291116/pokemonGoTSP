@@ -66,7 +66,7 @@ public class Driver {
             Tour r = new Tour(route);
 
             Tour bestTour = ils.run(r);
-            printSolution(bestTour, path, city, alg, cutoff, seed);
+            printSolution(bestTour, path, city, alg, cutoff, seed, 1);
         } else if (alg.equals("LS2")) { //Run LS2
             SimulatedAnnealing sa = new SimulatedAnnealing(city, 1 - Math.pow(10, -6), 1.0, 0.00001, seed, cutoff, path);
             Tour r = new Tour(route, sa.getRandy());
@@ -74,7 +74,7 @@ public class Driver {
             Tour bestTour = sa.findtour(r);
             sa.output.close();
             // System.out.println("Global minimum: " + bestTour.getTotalStringDistance());
-            printSolution(bestTour, path, city, alg, cutoff, seed);
+            printSolution(bestTour, path, city, alg, cutoff, seed, 1);
         } else if (alg.equals("APP1")) {
             //MST-Approximation
             MST mst = new MST(route);
@@ -90,7 +90,7 @@ public class Driver {
                 result.add(m.get(wyc));
             }
             Tour bestTour = new Tour(result);
-            printSolution(bestTour, path, city, alg, cutoff, seed);
+            printSolution(bestTour, path, city, alg, cutoff, seed, 0);
             String outputFile = path + city + "_" + alg + "_" + cutoff + ".trace";
             PrintWriter output = new PrintWriter(outputFile, "UTF-8");
             output.format("%.2f,%d%n", time, (int)bestTour.getTotalDistance());
@@ -108,7 +108,7 @@ public class Driver {
                 result.add(m.get(wyc));
             }
             Tour bestTour = new Tour(result);
-            printSolution(bestTour, path, city, alg, cutoff, seed);
+            printSolution(bestTour, path, city, alg, cutoff, seed, 0);
             String outputFile = path + city + "_" + alg + "_" + cutoff  + ".trace";
             PrintWriter output = new PrintWriter(outputFile, "UTF-8");
             output.format("%.2f,%d%n", time, (int)bestTour.getTotalDistance());
@@ -135,8 +135,14 @@ public class Driver {
      * @throws FileNotFoundException
      * @throws UnsupportedEncodingException
      */
-    public static void printSolution(Tour bestTour, String path, String city, String alg, int cutoff, int seed) throws FileNotFoundException, UnsupportedEncodingException {
-        String solutionFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".sol";
+    public static void printSolution(Tour bestTour, String path, String city, String alg, int cutoff, int seed, int hasseed) throws FileNotFoundException, UnsupportedEncodingException {
+        String solutionFile;
+        if (hasseed == 0) {
+            solutionFile = path + city + "_" + alg + "_" + cutoff+ ".sol";      
+        } else {
+            solutionFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".sol"; 
+        }
+
         PrintWriter solution = new PrintWriter(solutionFile, "UTF-8");
 
         ArrayList<Location> locations = bestTour.getLocations();
@@ -153,6 +159,9 @@ public class Driver {
         solution.format("%d %d %d%n", locations.get(tourSize-1).getId(), locations.get(0).getId(), cost);
         solution.close();
     }
+
+
+
 
     /** Print a solution to a sol file, used for both local search and approximation algorithms
      * @param bestTour
