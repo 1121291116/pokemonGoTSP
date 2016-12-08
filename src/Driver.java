@@ -82,6 +82,7 @@ public class Driver {
             LinkedList<Edge> MST = mst.buildMST();
             MstApproximation mstApp = new MstApproximation(route.size(), MST);
             LinkedList<Integer> TSP = mstApp.findTSP();
+            
             long end = System.nanoTime();
             double time = (end - start) / 1e9;
             ArrayList<Location> result= new ArrayList<Location>();
@@ -90,7 +91,7 @@ public class Driver {
             }
             Tour bestTour = new Tour(result);
             printSolution(bestTour, path, city, alg, cutoff, seed);
-            String outputFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".trace";
+            String outputFile = path + city + "_" + alg + "_" + cutoff + ".trace";
             PrintWriter output = new PrintWriter(outputFile, "UTF-8");
             output.format("%.2f,%d%n", time, (int)bestTour.getTotalDistance());
             output.close();
@@ -108,7 +109,7 @@ public class Driver {
             }
             Tour bestTour = new Tour(result);
             printSolution(bestTour, path, city, alg, cutoff, seed);
-            String outputFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".trace";
+            String outputFile = path + city + "_" + alg + "_" + cutoff  + ".trace";
             PrintWriter output = new PrintWriter(outputFile, "UTF-8");
             output.format("%.2f,%d%n", time, (int)bestTour.getTotalDistance());
             output.close();
@@ -164,7 +165,7 @@ public class Driver {
      * @throws UnsupportedEncodingException
      */
     public static void bnbPrintSolution(Tour bestTour, String path, String city, String alg, int cutoff, int seed) throws FileNotFoundException, UnsupportedEncodingException {
-        String solutionFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".sol";
+        String solutionFile = path + city + "_" + alg + "_" + cutoff + ".sol";
         PrintWriter solution = new PrintWriter(solutionFile, "UTF-8");
 
         ArrayList<Location> locations = bestTour.getLocations();
