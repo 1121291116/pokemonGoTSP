@@ -1,6 +1,6 @@
 package pokemonGo;
 /*
- * Implementation of the graph
+ * Implementation of the graph, store all the edges in the graph
  */
 public class Edge {
 	private int starting;

@@ -1,4 +1,8 @@
 package pokemonGo;
+/*
+	an implementation of Nearest neighbor. It finds the nearest node for every iteration. 
+	Created by Yichuan Wang
+ */
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -11,15 +15,17 @@ public class NearestNeighbor {
 	public NearestNeighbor(HashMap m){
 		unvisited.putAll(m);
 	}
-	
+	//return the TSP using nearest neighbor
 	public LinkedList<Integer> findTSP(){
 		int current = 1;
 		int minVertex = 0;
 		Location cur = unvisited.get(current);
 		TSP.add(current);
 		unvisited.remove(current);
+		// traverse all nodes that has not been visited
 		while(!unvisited.isEmpty()){
 			double minLength = Double.MAX_VALUE;
+			// find the closest neighbor
 			for(int i : unvisited.keySet()){
 				double curDis = cur.distanceTo(unvisited.get(i));
 				if (curDis < minLength){
@@ -32,9 +38,7 @@ public class NearestNeighbor {
 			TSP.add(minVertex);
 			unvisited.remove(minVertex);
 		}
-		if(minVertex != 1){
-			TSP.add(1);
-		}
+		
 		return TSP;
 	}
 	

@@ -1,4 +1,8 @@
 package pokemonGo;
+/*
+	an implementation of MST Approximation, the findTSP method will return the path 
+	Created by Yichuan Wang
+ */
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +37,7 @@ public class MstApproximation {
 		ArrayList<Integer> tour = new ArrayList<Integer>();
 		LinkedList<Integer> TSP = new LinkedList<Integer>();
 		HashMap m = new HashMap();
-		
+		// build a Euler graph and find the tour, adding one additional edge for each edge in MST
 		while(totalSize != 0){
 			if (euler[current - 1].isEmpty()){
 				tour.add(current);
@@ -51,18 +55,14 @@ public class MstApproximation {
 		while(!st.isEmpty()){
 			tour.add((int) st.pop());
 		}
-		
+		// find the TSP from the Euler 
 		for(int i : tour){
 			if(!m.containsKey(i)){
 				TSP.add(i);
 				m.put(i," ");
 			}
 		}
-		
-		if(TSP.getLast() != 1){
-			TSP.add(1);
-		}
-		
+				
 		return TSP;
 	}
 }

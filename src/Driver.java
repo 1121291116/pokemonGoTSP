@@ -1,27 +1,55 @@
-package pokemonGo;
+/**
+ * Created by chenzhijian on 11/19/16.
+ */
+import pokemonGo.*;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Set;
 
 public class Driver {
+
     public static void main(String[] args) throws Exception {
-        String city_file = args[0];
+
+        //Validate enough arguments
+        if (args.length < 8) {
+            System.out.println("Please enter arguments required correctly.");
+            System.exit(-1);
+        }
+        String city = args[1];
+
+        String city_file = city + ".tsp";
+
+
+        String alg = args[3];
+        int cutoff = Integer.parseInt(args[5]);
+        int seed = Integer.parseInt(args[7]);
+
+
+
+
+        String path = "./";
+
+        //Read corresponding input file
+
         BufferedReader br = new BufferedReader(new FileReader(city_file));
         String line = null;
-        HashMap m = new HashMap();
+        HashMap<Integer, Location> m = new HashMap<>();
 
-        ArrayList<Location> route = new ArrayList<Location>();
+
+        ArrayList<Location> route = new ArrayList<>();
         int i = 0;
-        System.out.println("-------------------------------------------");
-        while (i <= 4) {
-            System.out.println(br.readLine());
+
+        //Get rid of the first 4 lines
+
+        while(i <= 4) {
+            line = br.readLine();
             i++;
+
         }
-        System.out.println("-------------------------------------------");
+
+        //Read in from the files
         while ((line = br.readLine()) != null && !line.contains("EOF")) {
             String[] splitLine = line.split(" ");
             int id = Integer.parseInt(splitLine[0]);
@@ -31,53 +59,140 @@ public class Driver {
             route.add(l);
             m.put(id, l);
         }
-        
-        /*
-        Route r = new Route(route);
-
-        SimulatedAnnealing sa = new SimulatedAnnealing(0.95, 1.0, 0.00001, 50);
-        Route best_route = sa.findRoute(r);
-        ArrayList<Location> best = best_route.getLocations();
 
 
+        //Run LS1
+        if (alg.equals("LS1")) {
+            IterativeLocalSearch ils = new IterativeLocalSearch(city, cutoff, seed, path);
 
-        Set<Route> s = sa.getVisited();
-        Route min = best_route;
-        for (Route x : s) {
-            if (x.getTotalDistance() < min.getTotalDistance()) {
-                min = x;
+            Tour r = new Tour(route);
+
+            Tour bestTour = ils.run(r);
+            printSolution(bestTour, path, city, alg, cutoff, seed, 1);
+        } else if (alg.equals("LS2")) { //Run LS2
+            SimulatedAnnealing sa = new SimulatedAnnealing(city, 1 - Math.pow(10, -6), 1.0, 0.00001, seed, cutoff, path);
+            Tour r = new Tour(route, sa.getRandy());
+
+            Tour bestTour = sa.findtour(r);
+            sa.output.close();
+            printSolution(bestTour, path, city, alg, cutoff, seed, 1);
+        } else if (alg.equals("APP1")) {
+            //MST-Approximation
+            MST mst = new MST(route);
+            long start = System.nanoTime();
+            LinkedList<Edge> MST = mst.buildMST();
+            MstApproximation mstApp = new MstApproximation(route.size(), MST);
+            LinkedList<Integer> TSP = mstApp.findTSP();
+            
+            long end = System.nanoTime();
+            double time = (end - start) / 1e9;
+            ArrayList<Location> result= new ArrayList<Location>();
+            for (int wyc : TSP){
+                result.add(m.get(wyc));
             }
+            Tour bestTour = new Tour(result);
+            printSolution(bestTour, path, city, alg, cutoff, seed, 0);
+            String outputFile = path + city + "_" + alg + "_" + cutoff + ".trace";
+            PrintWriter output = new PrintWriter(outputFile, "UTF-8");
+            output.format("%.2f,%d%n", time, (int)bestTour.getTotalDistance());
+            output.close();
+
+        } else if (alg.equals("APP2")) { //Run Approximation using nearest neighbor
+            NearestNeighbor nearNb = new NearestNeighbor(m);
+            long start = System.nanoTime();
+            LinkedList<Integer> TSP = nearNb.findTSP();
+            long end = System.nanoTime();
+            double time = (end - start) / 1e9;
+            
+            ArrayList<Location> result= new ArrayList<Location>();
+            for (int wyc : TSP){
+                result.add(m.get(wyc));
+            }
+            Tour bestTour = new Tour(result);
+            printSolution(bestTour, path, city, alg, cutoff, seed, 0);
+            String outputFile = path + city + "_" + alg + "_" + cutoff  + ".trace";
+            PrintWriter output = new PrintWriter(outputFile, "UTF-8");
+            output.format("%.2f,%d%n", time, (int)bestTour.getTotalDistance());
+            output.close();
+
+        } else if (alg.equals("BNB")){ //RUN branch and bound
+            BnB bnb = new BnB(route, m, cutoff, seed, path, city);
+            Tour bestTour = bnb.findOptimal();
+            // System.out.println(bestTour.toString());
+            bnbPrintSolution(bestTour, path, city, alg, cutoff, seed);
         }
- 		
-        System.out.println(min.getTotalDistance());
-		*/
-        
-        
-        //MST-Approximation
-        MST mst = new MST(route);
-        LinkedList<Edge> MST = mst.buildMST();      
-        MstApproximation mstApp = new MstApproximation(route.size(), MST);
-        LinkedList<Integer> TSP = mstApp.findTSP();
-        
-        //Nearest Neighbor
-//        NearestNeighbor nearNb = new NearestNeighbor(m);
-//        LinkedList<Integer> TSP = nearNb.findTSP();
-        
-        /*
-         * Calculate total distance
-         */
-        int previous = 1;
-        double total = 0;
-        for (int s : TSP){
-        	Location temp = (Location) m.get(s);
-        	total = total + temp.distanceTo((Location) m.get(previous));
-        	previous = s;
+        else {
+            System.out.println("INVALID INPUT");
+        }
+    }
+
+    /** Print a solution to a sol file, used for both local search and approximation algorithms
+     * @param bestTour
+     * @param path
+     * @param city
+     * @param alg
+     * @param cutoff
+     * @param seed
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public static void printSolution(Tour bestTour, String path, String city, String alg, int cutoff, int seed, int hasseed) throws FileNotFoundException, UnsupportedEncodingException {
+        String solutionFile;
+        if (hasseed == 0) {
+            solutionFile = path + city + "_" + alg + "_" + cutoff+ ".sol";      
+        } else {
+            solutionFile = path + city + "_" + alg + "_" + cutoff + "_" + seed + ".sol"; 
         }
 
-        for(int s : TSP){
-        	System.out.print(s + ", ");
+        PrintWriter solution = new PrintWriter(solutionFile, "UTF-8");
+
+        ArrayList<Location> locations = bestTour.getLocations();
+        int cost;
+        int tourSize = bestTour.getSize();
+        solution.format("%d%n", (int)bestTour.getTotalDistance());
+
+        for (int i = 0; i < tourSize -1; i++) {
+            cost = (int)locations.get(i).distanceTo(locations.get(i + 1));
+            solution.format("%d %d %d%n", locations.get(i).getId(), locations.get(i+1).getId(), cost);
         }
-        System.out.println(total);
-        
+
+        cost = (int)locations.get(tourSize-1).distanceTo(locations.get(0));
+        solution.format("%d %d %d%n", locations.get(tourSize-1).getId(), locations.get(0).getId(), cost);
+        solution.close();
+    }
+
+
+
+
+    /** Print a solution to a sol file, used for branch and bound
+     * @param bestTour
+     * @param path
+     * @param city
+     * @param alg
+     * @param cutoff
+     * @param seed
+     * @throws FileNotFoundException
+     * @throws UnsupportedEncodingException
+     */
+    public static void bnbPrintSolution(Tour bestTour, String path, String city, String alg, int cutoff, int seed) throws FileNotFoundException, UnsupportedEncodingException {
+        String solutionFile = path + city + "_" + alg + "_" + cutoff + ".sol";
+        PrintWriter solution = new PrintWriter(solutionFile, "UTF-8");
+
+        ArrayList<Location> locations = bestTour.getLocations();
+        int cost;
+        int tourSize = bestTour.getSize();
+        solution.format("%d%n", (int)bestTour.getTotalDistance());
+
+        for (int i = 0; i < tourSize; i++) {
+//
+            cost = (int) Math.ceil(locations.get(i).distanceTo(locations.get(i + 1)));
+            solution.format("%d %d %d%n", locations.get(i).getId(), locations.get(i+1).getId(), cost);
+
+
+        }
+        cost = (int) locations.get(tourSize).distanceTo(locations.get(0));
+        solution.format("%d %d %d%n", locations.get(tourSize).getId(), locations.get(0).getId(), cost);
+
+        solution.close();
     }
 }

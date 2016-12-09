@@ -1,8 +1,17 @@
+/** 
+ * This class takes in parameters and perform a iterative local serach
+ */
+
+
+package pokemonGo;
+
+
 import java.util.*;
 import java.io.PrintWriter;
 import java.io.IOException;
 
 /**
+ * The implementation of Iterative local search
  * Created by chenzhijian on 11/19/16.
  */
 public class IterativeLocalSearch {
@@ -10,7 +19,7 @@ public class IterativeLocalSearch {
     Map<Integer, int[]> swapMap;
     ArrayList<Integer> swapIds;
     double[][] distanceMatrix;
-    Random randy;
+    private Random randy;
     double currentCost;
     long timeElapsed;
     long duration;
@@ -21,23 +30,32 @@ public class IterativeLocalSearch {
 
 
 
-    public IterativeLocalSearch(Tour t, String city, int cutoff, int seed, String path) throws IOException {
-        bestTour = t;
-        constructSwapMap(t);
+    public IterativeLocalSearch(String city, int cutoff, int seed, String path) throws IOException {
         timeElapsed = 0;
         this.duration = cutoff * 1000;
         randy = new Random(seed);
         outputFile = path + city + "_LS1_" + cutoff + "_" + seed + ".trace";
         this.output = new PrintWriter(outputFile, "UTF-8");
-        System.out.println(outputFile);
+        // System.out.println(outputFile);
     }
 
-    public void run() {
-        iterativeHillClimbing(bestTour);
+    /**
+     * Initiate a local search 
+     * @param  t A tour to start
+     * @return   the best tour found from search
+     */
+    public Tour run(Tour t) {
+        bestTour = new Tour(t.getLocations());
+        constructSwapMap(t);
+        iterativeHillClimbing(t);
         output.close();
+        return bestTour;
     }
 
 
+    /**The constructs a hashmap to store all 2-opt possibilities for a sotuion of size n
+     * @param t is the original tour taken in from the input
+     */
     private void constructSwapMap(Tour t) {
         swapMap = new HashMap<>();
         swapIds = new ArrayList<>();
@@ -55,6 +73,11 @@ public class IterativeLocalSearch {
         }
     }
 
+    /**The method keeps doing the HillClimbing, record best solution found, purturb the tour found at the end of each
+     * iteration and send it to the next one
+     * @param tour is the original tour taken in from the input
+     * @return return the best solution found
+     */
     private Tour iterativeHillClimbing(Tour tour) {
         this.currentCost = bestTour.getTotalDistance();
         this.startTime = System.currentTimeMillis();
@@ -64,28 +87,32 @@ public class IterativeLocalSearch {
             tour = hillClimbing(tour);
             double newTourLength = tour.getTotalDistance();
 
-            if (newTourLength < currentCost) {
-                bestTour = tour;
-                this.currentCost = newTourLength;
+            if (newTourLength < bestTour.getTotalDistance()) {
+                bestTour = new Tour(tour.getLocations());
+//                bestTour.printTour();
+//                this.currentCost = newTourLength;
             }
+            //tour = doubleBridgeMove(bestTour);
             tour = doubleBridgeMove(tour);
+
         }
 
-        tour.printTour();
-        return tour;
+        return bestTour;
     }
 
 
+    /**This method runs one hillClimbing algorithm
+     * it keeps updating the tour as long as it finds a better one in the neighborhood.
+     * the algorithm stops once it cannot find any better solution in the neighborhood
+     * @param tour
+     * @return the local best solution
+     */
     private Tour hillClimbing(Tour tour) {
-        //evaluate current tour cost
-        //generate new tours based on current
-        //compare
         double localMin = tour.getTotalDistance();
         double newCost;
         HashSet<Integer> swapped = new HashSet<>();
 
         while (System.currentTimeMillis() - startTime < duration) {
-
             int swap = randy.nextInt(swapMap.size());
             if (!swapped.contains((swap))) {
                 swapped.add(swap);
@@ -97,11 +124,10 @@ public class IterativeLocalSearch {
                     localMin = newCost;
                     swapped = new HashSet<>();
 
-                    if (localMin < currentCost) {
-                        currentCost = localMin;
+                    if (localMin < bestTour.getTotalDistance()) {
                         double ts = ((double)(System.currentTimeMillis() - startTime)) / 1000;
-                        System.out.println(ts + "\t" + currentCost);
-                        output.format("%.3f\t%f%n", ts, currentCost);
+                        // System.out.println(ts + "\t" + tour.getTotalDistance());
+                        output.format("%.2f,%d%n", ts, (int)tour.getTotalDistance());
 
                     }
                 }
@@ -113,16 +139,20 @@ public class IterativeLocalSearch {
             }
         }
         timeElapsed = System.currentTimeMillis() - startTime;
-        // return localBest;
         return tour;
     }
 
-    private Tour twoOpt(Tour candidate, int swapId) {
-        int length = candidate.getSize();
+    /**This method deos a 2-opt operation to a tour
+     * @param tour
+     * @param swapId matches with a 2-opt possibility to reach a neightbor
+     * @return a new tour
+     */
+    private Tour twoOpt(Tour tour, int swapId) {
+        int length = tour.getSize();
         Location[] output = new Location[length];
         int cut1 = swapMap.get(swapId)[0];
         int cut2 = swapMap.get(swapId)[1];
-        Location[] array = candidate.getLocations().toArray(new Location[length]);
+        Location[] array = tour.getLocations().toArray(new Location[length]);
 
         System.arraycopy(array, 0, output, 0, cut1);
         Location[] middle = new Location[cut2 - cut1];
@@ -140,7 +170,10 @@ public class IterativeLocalSearch {
         return newTour;
     }
 
-    // Implement double bridge move to create a perturbation
+    /** This method implements double bridge move to create a perturbation
+     * @param tour
+     * @return a new tour
+     */
     private Tour doubleBridgeMove(Tour tour) {
         int length = tour.getLocations().size();
         Location[] perturbed = new Location[length];
@@ -158,7 +191,9 @@ public class IterativeLocalSearch {
         return new Tour(newList);
     }
 
-
+    public Random getRandy() {
+        return randy;
+    }
 
 
 }
